@@ -3,28 +3,53 @@ clc
 close all
 
 %Variable théorique du contexte
-V = 10;
 R = 3.6;
 L = 0.115;
-t = [0:0.001:0.2]; % Pour les calculs, t commence et fini dans les même temps que la simulation et les pas sont les même
 
-i = (V/R).*((1-exp((-R/L).*t))); %Équation théorique du courrant dans un circuit Rl
-current_sim = sim('Courant'); %Rouler la simulation. le nom de la simulation est le nom du fichier de simulink
+
+
+starttime = 0;
+stoptime = 1;
+fixedstep = 0.00001;
+
+
+%Valeur des entrées de la simulation
+simulation_time = [starttime:fixedstep:stoptime]';
+V_simulated_values = zeros(size(simulation_time));
+V_simulated_values(simulation_time>0.2) = 5;
+V_simulated_values(simulation_time>0.7) = 0;
+
+
+test = zeros(size(simulation_time));
+test(simulation_time>0.2) = 5;
+test(simulation_time>0.7) = 0;
+
+%normalement.
+i_tf = tf([1/R], [L/R 1])
+isim = lsim(i_tf,V_simulated_values,simulation_time)
+V_simulated = timeseries(V_simulated_values, simulation_time);
+simout = sim('Courant','StartTime',string(starttime),'StopTime',string(stoptime),'FixedStep',string(fixedstep));
+
+
+
+
+%% Comparaison valeur simulation vs matlab
 
 figure()
 hold on
 subplot(2, 1, 1)
-plot(t, i)
+plot(simulation_time, isim)
 title('Courbe théorique du courant en fonction du temps')
 xlabel('temps [sec]')
 ylabel('courant [Amp]')
 subplot(2,1, 2)
-plot(current_sim.iCurrent.time,current_sim.iCurrent.data)
+plot(simout.iCurrent.time,simout.iCurrent.data)
 title('Courbe de la simulation du courant en fonction du temps')
 xlabel('temps [sec]')
 ylabel('courant [Amp]')
 
 
-E = sum((current_sim.iCurrent.data- i').^2, 'all');
-RMS = ((1/201)*E)^0.5;
+E = sum((simout.iCurrent.data- isim).^2, 'all');
+length = size(simulation_time)
+RMS = ((1/length(1))*E)^0.5;
 disp(['Valeur RMS = ', num2str(RMS)])
