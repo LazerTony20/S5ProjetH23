@@ -96,6 +96,7 @@ legend('Phi (Sim)', 'Theta (Sim)', 'Z (Sim)','Phi (Matlab)', 'Theta (Matlab)', '
 hold off
 grid on
 
+%% Erreur RMS
 RMSE_phi = ((1/101)*sum((simout.phi.data - phi).^2))^0.5;
 RMSE_zeta = ((1/101)*sum(( simout.theta.data - theta).^2))^0.5;
 RMSE_z = ((1/101)*sum((simout.z.data - z).^2))^0.5;

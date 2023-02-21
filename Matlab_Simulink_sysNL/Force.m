@@ -1,6 +1,7 @@
-clear all
-close all
 clc
+close all
+clear all
+
 
 %%%%%%%%%%%%%%%%
 %Cette section contiendra les calculs afin de déteminer la valeur des
@@ -19,7 +20,7 @@ as3 = 0.004;
 
 
 poly_ae = [ae3 ae2 ae1 ae0];
-poly_as = [ae3 ae2 ae1 ae0];
+poly_as = [as3 as2 as1 as0];
 num = -1; %Numérateur de Fsk
 be = 5; %Valeur de Be. Donnée dans les spécifications (N'EST PAS LA BONNE EN CE MOMENT
 starttime = 0;
@@ -39,4 +40,10 @@ z_simulated = timeseries(z_simulated_values, simulation_time);
 i_simulated = timeseries(i_simulated_values, simulation_time);
 simout = sim('Forces','StartTime',string(starttime),'StopTime',string(stoptime),'FixedStep',string(fixedstep));
 
+%% Affichage
+figure('Name','Force (Sim)')
 plot(simout.Fek.time, simout.Fek.data)
+title('Force over Time')
+xlabel('Time')
+ylabel('Force')
+grid on
