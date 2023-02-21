@@ -60,7 +60,7 @@ v_z = cumtrapz(simulation_time, a_z); %Équivalent à l'intégrator
 z = cumtrapz(simulation_time, v_z); %Équivalent à l'integrator
 
 %% Afficher le graphique des coordonnées des actionneurs
-figure();
+figure('Name','Position des actionneur A B et C');
 hold on
 title('Position des actionneur A B et C')
 plot(Xa,Ya, '.')
@@ -68,28 +68,33 @@ plot(Xb,Yb, '.')
 plot(Xc,Yc, '.')
 xlim([-1.5, 1.5])
 legend('A', 'B', 'C')
+hold off
+grid on
 
 %% Afficher les résultats de la simulation
-figure();
+figure('Name','\phi, \theta et z en fonction du temps');
 hold on
-title('\phi, \theta et z en fonction du temps')
-plot(simulation_time, simout.phi.data)
-plot(simulation_time, simout.theta.data)
+title('phi, theta et z en fonction du temps (Sim)')
+plot(simulation_time, simout.phi.data,'b')
+plot(simulation_time, simout.theta.data,'y--')
 plot(simulation_time, simout.z.data)
 legend('Phi', 'Theta', 'Z')
-
+hold off
+grid on
 
 %% Comparaison matlab/simulink
-figure();
+figure('Name','Dynamique de la plaque (Matlab VS Simulink)');
 hold on
 title('\phi, \theta et z en fonction du temps')
 plot(simulation_time, simout.phi.data)
 plot(simulation_time, simout.theta.data)
 plot(simulation_time, simout.z.data)
-plot(simulation_time, phi)
-plot(simulation_time,theta)
-plot(simulation_time, z)
-legend('Phi', 'Theta', 'Z')
+plot(simulation_time, phi,'r--')
+plot(simulation_time,theta,'--')
+plot(simulation_time, z,'b--')
+legend('Phi (Sim)', 'Theta (Sim)', 'Z (Sim)','Phi (Matlab)', 'Theta (Matlab)', 'Z (Matlab)','Location','northwest')
+hold off
+grid on
 
 RMSE_phi = ((1/101)*sum((simout.phi.data - phi).^2))^0.5;
 RMSE_zeta = ((1/101)*sum(( simout.theta.data - theta).^2))^0.5;
