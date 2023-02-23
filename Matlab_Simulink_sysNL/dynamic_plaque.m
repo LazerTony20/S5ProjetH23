@@ -10,17 +10,17 @@ mp = 1;
 Fg = mp*g;
 r = 1;
 
-Xa = -r;
+Xa = r;
 Ya = 0;
-Za = 1;
+Za = 0;
+Xb = -r*sin(deg2rad(30));
+Yb = r*cos(deg2rad(30));
+Zb = 0;
+Xc = -r*sin(deg2rad(30));
+Yc = r*cos(deg2rad(30));
+Zc = 0;
 
-Xb = 0.5*r;
-Yb = 0.5*r*(3)^0.5;
-Zb = 1;
 
-Xc = 0.5*r;
-Yc = -0.5*r*(3)^0.5;
-Zc = 1;
 
 js = 5;
 ms = 0.01;
@@ -30,6 +30,13 @@ ms = 0.01;
 starttime = 0;
 stoptime = 10;
 fixedstep = 0.1;
+
+X_ai = Xa;
+Y_ai = Ya;
+X_bi = Xb;
+Y_bi = Yb;
+X_ci = Xc;
+Y_ci = Yc;
 
 %Valeur des entrées de la simulation
 simulation_time = [starttime:fixedstep:stoptime];
@@ -57,15 +64,15 @@ Z_b_sim = simout2.Z_b.data;
 Z_c_sim = simout2.Z_c.data;
 
 %Évaluation (calcul) par matlab uniquement
-a_phi = (-Xa.*F_a_sim_values - Xb.*F_b_sim_values - Xc.*F_c_sim_values)/mp;
+a_phi = (F_a_sim_values.*X_ai + F_b_sim_values.*X_bi + F_c_sim_values*X_ci)/mp;
 w_phi = cumtrapz(simulation_time, a_phi); %Équivalent à l'intégrator
 phi = cumtrapz(simulation_time, w_phi); %Équivalent à l'integrator
 
-a_theta = (-Ya.*F_a_sim_values - Yb.*F_b_sim_values - Yc.*F_c_sim_values)/mp;
+a_theta = (F_b_sim_values.*Y_bi +F_c_sim_values.*Y_ci)/mp;
 w_theta = cumtrapz(simulation_time, a_theta); %Équivalent à l'intégrator
 theta = cumtrapz(simulation_time, w_theta); %Équivalent à l'integrator
 
-a_z = (-Za.*F_a_sim_values - Zb.*F_b_sim_values - Zc.*F_c_sim_values + Fg)/mp;
+a_z = (F_a_sim_values + F_b_sim_values + F_c_sim_values + Fg)/mp;
 v_z = cumtrapz(simulation_time, a_z); %Équivalent à l'intégrator
 z = cumtrapz(simulation_time, v_z); %Équivalent à l'integrator
 
