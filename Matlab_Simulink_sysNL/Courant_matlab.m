@@ -1,14 +1,11 @@
-
-
-
-%%
-%Variable théorique du contexte
 clear all
-close all
 clc
+close all
 
-load("donnee_sim_prof.mat")
+load("donnees_prof_nl.mat")
 
+%% Simulation général matlab vs simulink
+%Variable théorique du contexte
 R = 3.6;
 L = 0.115;
 
@@ -58,3 +55,33 @@ E = sum((simout.iCurrent.data- isim).^2, 'all');
 length = size(simulation_time)
 RMS = ((1/length(1))*E)^0.5;
 disp(['Valeur RMS = ', num2str(RMS)])
+
+%% Validation simulation prof vs modèle simulink
+clear all
+close all
+clc
+
+load("donnees_prof_nl.mat")
+
+
+%Variable théorique du contexte
+R = 3.6;
+L = 0.115;
+
+
+V_simulated = timeseries(VA, tsim);
+simout = sim('Courant','StartTime',string(tsim(1)),'StopTime',string(tsim(end)),'FixedStep',string(tsim(2)-tsim(1)));
+
+figure('Name','Comparaison valeur simulation vs prof')
+hold on
+subplot(2, 1, 1)
+plot(tsim, IA)
+title('Courbe du courant du prof en fonction du temps')
+xlabel('temps [sec]')
+ylabel('courant [Amp]')
+subplot(2, 1, 2)
+plot(simout.iCurrent.time,simout.iCurrent.data)
+title('Courbe de la simulation du courant en fonction du temps')
+xlabel('temps [sec]')
+ylabel('courant [Amp]')
+
