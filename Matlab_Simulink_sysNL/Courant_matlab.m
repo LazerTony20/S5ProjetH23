@@ -1,8 +1,14 @@
-clear all
-clc
-close all
 
+
+
+%%
 %Variable théorique du contexte
+clear all
+close all
+clc
+
+load("donnee_sim_prof.mat")
+
 R = 3.6;
 L = 0.115;
 
