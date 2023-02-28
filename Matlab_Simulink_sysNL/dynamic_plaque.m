@@ -8,7 +8,7 @@ load("donnees_prof_nl.mat")
 %paramètres des force. Pour le moment, des valeurs temporaires sont mises
 
 g = 9.81;
-mp = 0.442;
+mp = 425e-03 + 0.008; 
 Jp = 1.347;
 Fg = mp*g;
 r = 95.2*10^-3;
@@ -25,7 +25,6 @@ Zc = 0;
 
 
 
-js = 5;
 Rs = 0.0039;
 ms = 0.008;
 Js = (2*ms*Rs^2)/5
@@ -81,7 +80,7 @@ a_theta = (F_b_sim_values.*Y_bi +F_c_sim_values.*Y_ci)/mp;
 w_theta = cumtrapz(simulation_time, a_theta); %Équivalent à l'intégrator
 theta = cumtrapz(simulation_time, w_theta); %Équivalent à l'integrator
 
-a_z = (F_a_sim_values + F_b_sim_values + F_c_sim_values + Fg)/mp;
+a_z = (FA + FB + FC + Fg)/mp;
 v_z = cumtrapz(simulation_time, a_z); %Équivalent à l'intégrator
 z = cumtrapz(simulation_time, v_z); %Équivalent à l'integrator
 
@@ -152,20 +151,20 @@ RMSE_z = ((1/101)*sum((simout.z.data - z).^2))^0.5;
 F_a_sim = timeseries(FA, tsim);
 F_b_sim = timeseries(FB, tsim);
 F_c_sim = timeseries(FC, tsim);
-simout = sim('dynamic_plaque_model','StartTime',string(tsim(1)),'StopTime',string(tsim(end)),'FixedStep',string(0.001));
 
-figure()
-plot(simout.debug_ftot.time, simout.debug_ftot.data)
+a_z = (FA + FB + FC + Fg)/mp;
+v_z = cumtrapz(tsim, a_z); %Équivalent à l'intégrator
+z = cumtrapz(tsim, v_z)+0.015; %Équivalent à l'integrator
 
-figure('Name','Comparaison valeur simulation vs prof')
+figure('Name','Comparaison valeur simulation vs prof (Matlab)')
 hold on
 subplot(2, 1, 1)
 plot(tsim, Pz)
 title('Courbe du courant du prof en fonction du temps')
 xlabel('temps [sec]')
-ylabel('courant [Amp]')
+ylabel('Hauteur ')
 subplot(2, 1, 2)
-plot(simout.z.time,simout.z.data)
-title('Courbe de la simulation du courant en fonction du temps')
+plot(tsim,z)
+title('Courbe de la hauteur de la plaque en fonction du temps')
 xlabel('temps [sec]')
-ylabel('courant [Amp]')
+ylabel('hauteur ')

@@ -3,7 +3,8 @@ close all
 clear all
 
 load("coefficients.mat")
-%%
+load("donnees_prof_nl.mat")
+
 
 %%%%%%%%%%%%%%%%
 %Cette section contiendra les calculs afin de déteminer la valeur des
@@ -54,10 +55,8 @@ ylabel('Force')
 grid on
 
 
-
 %% Simulation avec le prof
 
-load("donnees_prof_nl.mat")
 
 %Création des paramètres de la simulation. Ne doit pas être changé
 %normalement.
@@ -65,15 +64,15 @@ z_simulated = timeseries(zB, tsim);
 i_simulated = timeseries(IB, tsim);
 simout = sim('Forces','StartTime',string(tsim(1)),'StopTime',string(tsim(end)),'FixedStep',string(0.001));
 
-figure('Name','Comparaison valeur simulation vs prof')
+figure('Name','Comparaison valeur simulation vs prof (Simulation)')
 hold on
 subplot(2, 1, 1)
 plot(tsim, FB)
-title('Courbe de FA du prof en fonction du temps')
+title('Courbe de Force du prof en fonction du temps')
 xlabel('temps [sec]')
-ylabel('courant [Amp]')
+ylabel('Force [N]')
 subplot(2, 1, 2)
 plot(simout.F.time,simout.F.data)
-title('Courbe de la simulation de FA en fonction du temps')
+title('Courbe de la simulation de Force en fonction du temps')
 xlabel('temps [sec]')
-ylabel('courant [Amp]')
+ylabel('Force [N]')
