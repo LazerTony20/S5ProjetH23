@@ -9,7 +9,7 @@ load("donnees_prof_nl.mat")
 
 g = 9.81;
 mp = 425e-03 + 0.008; 
-Jp = 1.347;
+Jp = 1.347*10^-3;
 Fg = mp*g;
 r = 95.2*10^-3;
 
@@ -156,15 +156,24 @@ a_z = (FA + FB + FC + Fg)/mp;
 v_z = cumtrapz(tsim, a_z); %Équivalent à l'intégrator
 z = cumtrapz(tsim, v_z)+0.015; %Équivalent à l'integrator
 
+a_phi = -(FA.*X_ai + FB.*X_bi + FC*X_ci + Fg_s*Px)/Jp;
+w_phi = cumtrapz(tsim, a_phi); %Équivalent à l'intégrator
+phi = cumtrapz(tsim, w_phi); %Équivalent à l'integrator
+
+a_theta = (FA.*Y_ai + FB.*Y_bi + FC*Y_ci + Fg_s*Py)/Jp;
+w_theta = cumtrapz(tsim, a_theta); %Équivalent à l'intégrator
+theta = cumtrapz(tsim, w_theta); %Équivalent à l'integrator
+
+
 figure('Name','Comparaison valeur simulation vs prof (Matlab)')
 hold on
 subplot(2, 1, 1)
-plot(tsim, Pz)
+plot(tsim, Ax)
 title('Courbe du courant du prof en fonction du temps')
 xlabel('temps [sec]')
 ylabel('Hauteur ')
 subplot(2, 1, 2)
-plot(tsim,z)
+plot(tsim,theta)
 title('Courbe de la hauteur de la plaque en fonction du temps')
 xlabel('temps [sec]')
 ylabel('hauteur ')
