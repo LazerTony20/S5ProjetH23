@@ -1,8 +1,2 @@
-# S5ProjetH23 
-Projet de session S5 Hiver 2023 Team 1
-uwu~
-
-
-
-Ceci est une ligne
-ceci est une autre ligne
+# S5ProjetH23 Dan branch 
+uwu~ see cawcuwations fow ie & ve
