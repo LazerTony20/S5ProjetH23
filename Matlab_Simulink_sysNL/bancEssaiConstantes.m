@@ -3,6 +3,9 @@ g   = 9.81;
 z_range  = 22.2e-03;            % m
 zr_comb = [0 0 0; 0 0 1; 0 1 0; 0 1 1; 1 0 0; 1 0 1; 1 1 0; 1 1 1]'*z_range;
 
+%Valeur de la bille (true of false)
+sig = 1;
+
 
 % Distance 2D du centre des aimants de sustentation au centre de la plaque
 rABC = 95.20e-03;     % m
@@ -86,3 +89,10 @@ RB =  RR;
 LB =  LL;
 RC =  RR;
 LC =  LL;
+
+
+
+
+
+
+
