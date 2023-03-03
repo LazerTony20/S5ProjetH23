@@ -13,20 +13,20 @@ Xnum_Fe_m1A = -(1+be1*abs(-1))
 Xnum_Fe_2mA = -(4+be1*abs(-2))
 
 %Méthode des moindres carrées
-P = [ones(size(z_m1A)) z_m1A z_m1A.^2 z_m1A.^3 z_m1A.^4]./Xnum_Fe;
+P = [ones(size(z_m1A)) z_m1A z_m1A.^2 z_m1A.^3 z_m1A.^4]./Xnum_Fe_m1A;
 Y = 1./Fe_m1A;
 A = pinv(P)*Y;
 
 %Création de la fonction Fe
-Fe_mc_1mA = Xnum_Fe_1mA./(A(1) + A(2).*z_m1A + A(3).*z_m1A.^2 + A(4).*z_m1A.^3)
+Fe_mc_1mA = Xnum_Fe_m1A./(A(1) + A(2).*z_m1A + A(3).*z_m1A.^2 + A(4).*z_m1A.^3)
 
 %Calcul des erreurs RMS et corrélation E
-E = sum((Fe_mc - Fe_m1A).^2);
-N = size(Fe_mc);
+E = sum((Fe_mc_1mA - Fe_m1A).^2);
+N = size(Fe_mc_1mA);
 N = N(1)
 RMS = ((1/N)*E).^0.5;
 Y_R2 = (1/N)*sum(Fe_m1A);
-R_2 = sum((Fe_mc - Y_R2).^2)/sum((Fe_m1A-Y_R2).^2);
+R_2 = sum((Fe_mc_1mA - Y_R2).^2)/sum((Fe_m1A-Y_R2).^2);
 
 %Affichage sur graphique
 figure();
