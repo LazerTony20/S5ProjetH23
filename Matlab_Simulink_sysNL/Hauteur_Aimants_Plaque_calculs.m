@@ -3,37 +3,11 @@ clear all
 clc
 
 load("donnees_prof_nl.mat")
-%%%%%%%%%%%%%%%%
-
-r_abc = 95.2*10^-3;
-r_def = 80*10^-3;
-
+Constante_NL
 
 phi_sim = timeseries(Ax, tsim);
 theta_sim = timeseries(Ay, tsim);
 z_sim = timeseries(Pz, tsim);
-
-%Cette section contiendra les calculs afin de déteminer la valeur des
-%paramètres des forces. Pour le moment, des valeurs temporaires sont mises
-
-
-Xa = r_abc;
-Ya = 0;
-Za = 0;
-Xb = -r_abc*sin(deg2rad(30));
-Yb = r_abc*cos(deg2rad(30));
-Zb = 0;
-Xc = -r_abc*sin(deg2rad(30));
-Yc = -r_abc*cos(deg2rad(30));
-Zc = 0;
-
-Xd = r_def*sin(deg2rad(30));
-Yd = r_def*cos(deg2rad(30));
-% Xe = -r_def*sin(deg2rad(30));
-Xe = -r_def;
-Ye = 0;
-Xf = r_def*sin(deg2rad(30));
-Yf = -r_def*cos(deg2rad(30));
 
 
 
@@ -45,20 +19,15 @@ simout2 = sim('Hauteur_Capteurs','StartTime',num2str(tsim(1)),'StopTime',num2str
 %%%%%%%%%%%%%%%%
 
 
-X_ai = Xa;
-Y_ai = Ya;
-X_bi = Xb;
-Y_bi = Yb;
-X_ci = Xc;
-Y_ci = Yc;
+
 
 %% Test de la conversion de position (Version matlab)
-z_a = Pz - Xa.*Ay + Ya.*Ax;
-z_b = Pz - Xb.*Ay + Yb.*Ax;
-z_c = Pz - Xc.*Ay + Yc.*Ax;
-z_d = Pz - Xd.*Ay + Yd.*Ax;
-z_e = Pz - Xe.*Ay + Ye.*Ax;
-z_f = Pz - Xf.*Ay + Yf.*Ax;
+z_a = Pz - XA.*Ay + YA.*Ax;
+z_b = Pz - XB.*Ay + YB.*Ax;
+z_c = Pz - XC.*Ay + YC.*Ax;
+z_d = Pz - XD.*Ay + YD.*Ax;
+z_e = Pz - XE.*Ay + YE.*Ax;
+z_f = Pz - XF.*Ay + YF.*Ax;
 
 figure('Name','Za')
 hold on;
@@ -67,7 +36,7 @@ plot(tsim, z_a)
 subplot(2,1,2)
 hold on;
 plot(tsim, zA,'b')
-plot(simout.Z_a.time,simout.Z_a.data,'--')
+plot(simout.ZA.time,simout.ZA.data,'--')
 hold off
 
 figure('Name','Zb')
@@ -77,7 +46,7 @@ plot(tsim, z_b)
 subplot(2,1,2)
 hold on
 plot(tsim, zB,'b')
-plot(simout.Z_b.time,simout.Z_b.data,'--')
+plot(simout.ZB.time,simout.ZB.data,'--')
 hold off
 
 figure('Name','Zc')
@@ -87,14 +56,14 @@ plot(tsim, z_c)
 subplot(2,1,2)
 hold on
 plot(tsim, zC,'b')
-plot(simout.Z_c.time,simout.Z_c.data,'--')
+plot(simout.ZC.time,simout.ZC.data,'--')
 hold off
 
 figure('Name','Zd')
 subplot(2,1,1)
 hold on
 plot(tsim, z_d)
-plot(simout2.Z_d.time,simout2.Z_d.data,'--')
+plot(simout2.ZD.time,simout2.ZD.data,'--')
 legend('Matlab','Simulink')
 hold off
 subplot(2,1,2)
@@ -106,7 +75,7 @@ figure('Name','Ze')
 subplot(2,1,1)
 hold on;
 plot(tsim, z_e)
-plot(simout2.Z_e.time,simout2.Z_e.data,'--')
+plot(simout2.ZE.time,simout2.ZE.data,'--')
 legend('Matlab','Simulink')
 hold off
 subplot(2,1,2)
@@ -118,7 +87,7 @@ figure('Name','Zf')
 subplot(2,1,1)
 hold on;
 plot(tsim, z_f)
-plot(simout2.Z_f.time,simout2.Z_f.data,'--')
+plot(simout2.ZF.time,simout2.ZF.data,'--')
 legend('Matlab','Simulink')
 hold off
 subplot(2,1,2)
