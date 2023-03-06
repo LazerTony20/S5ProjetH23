@@ -80,7 +80,7 @@ C4_deltaPy = Fg_sphere;
 C4_deltaIB = FA_L(2)*YA;
 C4_deltaIB = FB_L(2)*YB;
 C4_deltaIC = FC_L(2)*YC;
-delta_ddAx = (1/inertieP)*[C2_deltaZ C2_detltaAx C2_deltaAy 0 0 0 0 C4_deltaPy 0 0 C2_deltaIA C2_deltaIB C2_deltaIC];
+delta_ddAx = (1/inertieP)*[C4_deltaZ C4_detltaAx C4_deltaAy 0 0 0 0 C4_deltaPy 0 0 C4_deltaIA C4_deltaIB C4_deltaIC];
 
 %Equation pour delta_Px'
 delta_dPx = [0 0 0 0 0 0 0 0 1 0 0 0 0];
