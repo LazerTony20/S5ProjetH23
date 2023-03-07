@@ -1,6 +1,19 @@
 Constante_L
 load("donnees_prof_nl.mat");
 
+Ia_e = 0;
+Ib_e = 0;
+Ic_e = 0;
+Ax_e = 0;
+Ay_e = 0;
+Wx_e = 0;
+Wy_e = 0;
+Px_e = 0;
+Py_e = 0;
+Pz_e = Pz(1);
+Vx_e = 0;
+Vy_e = 0;
+
 Ia_e = IA(1);
 Ib_e = IB(1);
 Ic_e = IC(1);
@@ -33,18 +46,18 @@ figure()
 hold on
 
 subplot(2,1,1)
-FA_lin = FA_L(1).*(zA - Za_e) + FA_L(2).*(IA - Ia_e) + FA(1);
-plot(FA_lin)
+FA_lin = FA_L(1).*((Pz - Pz_e) - XA.*(Ay)) + FA_L(2).*(IA - Ia_e) + FA(1);
+plot(tsim, FA_lin)
 title("Courbe de données pour la fonction linéaire de FA")
 subplot(2,1,2)
-plot(FA)
+plot(tsim, FA)
 title("Courbe de données du banc d'essaie")
 
 figure()
 hold on
 subplot(2,1,1)
-FB_lin = FB_L(1).*(zB - Zb_e) + FB_L(2).*(IB - Ib_e) + FB(1);
-plot(FB_lin)
+FB_lin = FB_L(1).*((Pz - Pz_e) - XB.*(Ay) + YB.*(Ax)) + FB_L(2).*(IB - Ib_e) + FB(1);
+plot(tsim, FB_lin)
 title("Courbe de données pour la fonction linéaire de FB")
 subplot(2,1,2)
 plot(FB)
@@ -53,11 +66,11 @@ title("Courbe de données du banc d'essaie")
 figure()
 hold on
 subplot(2,1,1)
-FC_lin = FC_L(1).*(zC - Zc_e) + FC_L(2).*(IC - Ic_e) + FC(1);
-plot(FC_lin)
+FC_lin = FC_L(1).*((Pz - Pz_e) - XC.*(Ay) + YC.*(Ax)) + FC_L(2).*(IC - Ic_e) + FC(1);
+plot(tsim, FC_lin)
 title("Courbe de données pour la fonction linéaire FC")
 subplot(2,1,2)
-plot(FC)
+plot(tsim, FC)
 title("Courbe de données du banc d'essaie")
 
 figure()
