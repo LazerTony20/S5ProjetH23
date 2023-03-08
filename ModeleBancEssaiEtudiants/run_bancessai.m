@@ -26,6 +26,8 @@ bancEssaiConstantes
 %Calcul des compensateurs
 %iniCTL_ver4    %Calculez vos compensateurs ici
 
+equation_lineaire
+
 %simulation
 open_system('DYNctl_ver4_etud_obfusc')
 set_param('DYNctl_ver4_etud_obfusc','AlgebraicLoopSolver','LineSearch')

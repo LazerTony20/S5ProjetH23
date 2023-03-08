@@ -1,25 +1,13 @@
 Constante_L
 load("donnees_prof_nl.mat");
-
-Ia_e = 0;
-Ib_e = 0;
-Ic_e = 0;
-Ax_e = 0;
-Ay_e = 0;
-Wx_e = 0;
-Wy_e = 0;
-Px_e = 0;
-Py_e = 0;
-Pz_e = Pz(1);
-Vx_e = 0;
-Vy_e = 0;
-
-Ia_e = IA(1);
-Ib_e = IB(1);
-Ic_e = IC(1);
-Za_e = zA(1);
-Zb_e = zB(1);
-Zc_e = zC(1);
+% Entrez les valeurs à l'équilibre voulu. 
+Px_sphere = 0;
+Py_sphere = 0;
+Pz_plaque = 0.015;
+Ax_eq = 0;
+Ay_eq = 0;
+%
+Valeur_Equilibre
 
 C1_zsA = -(as1 + 2*as2*Za_e +3*as3*Za_e^2)/(as0 + as1*Za_e + as2*Za_e^2 +as3*Za_e^3)^2;
 C1_zeA = -(Ia_e*abs(Ia_e) + be*Ia_e)*(ae1 + 2*ae2*Za_e +3*ae3*Za_e^2)/(ae0 + ae1*Za_e + ae2*Za_e^2 +ae3*Za_e^3)^2;

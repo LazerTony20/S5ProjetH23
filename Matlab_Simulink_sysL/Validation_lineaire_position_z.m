@@ -1,18 +1,14 @@
 Constante_L
 load("donnees_prof_nl.mat");
 
-Ia_e = 0;
-Ib_e = 0;
-Ic_e = 0;
-Ax_e = 0;
-Ay_e = 0;
-Wx_e = 0;
-Wy_e = 0;
-Px_e = 0;
-Py_e = 0;
-Pz_e = Pz(1);
-Vx_e = 0;
-Vy_e = 0;
+% Entrez les valeurs à l'équilibre voulu. 
+Px_sphere = 0;
+Py_sphere = 0;
+Pz_plaque = 0.015;
+Ax_eq = 0;
+Ay_eq = 0;
+%
+Valeur_Equilibre
 
 figure()
 hold on

@@ -1,22 +1,26 @@
 Constante_L
 load("donnees_prof_nl.mat");
+% Entrez les valeurs à l'équilibre voulu. 
+Px_sphere = 0;
+Py_sphere = 0;
+Pz_plaque = 0.015;
+Ax_eq = 0;
+Ay_eq = 0;
+%
 
-Ia_e = IA(1);
+Valeur_Equilibre
 
-
-Vb_eq = VB(1);
-Va_eq = VA(1);
-Vc_eq = VC(1);
-
-delta_VA = timeseries((VA-Vc_eq), tsim);
-delta_VB = timeseries((VB-Vb_eq), tsim);
-delta_VC = timeseries((VC-Vc_eq), tsim);
+delta_VA = timeseries((VA-Vc_e), tsim);
+delta_VB = timeseries((VB-Vb_e), tsim);
+delta_VC = timeseries((VC-Vc_e), tsim);
+delta_Vk =delta_VA;
 simout = sim("Test_courant", "StartTime", '0', "StopTime", '50', "FixedStep", '0.0001');
 
 figure()
 hold on
 subplot(2,1,1);
 plot(simout.delta_Ik.time, simout.delta_Ik.data + Ia_e)
+title("Test")
 subplot(2,1,2);
 plot(tsim, IB)
 
@@ -38,6 +42,6 @@ figure()
 hold on
 subplot(2,1,1);
 simout = sim("test_ABCD", "StartTime", '0', "StopTime", '50', "FixedStep", '0.0001');
-plot(simout.delta_iA1.time, simout.delta_iA1.data + Ia_e)
+plot(simout.delta_iA2.time, simout.delta_iA2.data + Ia_e)
 subplot(2,1,2);
-plot(tsim, IB)
+plot(tsim, IC)
