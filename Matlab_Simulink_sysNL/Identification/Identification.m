@@ -15,6 +15,8 @@ Xnum_Fe_m1A = -(1+be1*abs(-1))
 Xnum_Fe_2mA = -(4+be1*abs(-2))
 
 %Méthode des moindres carrées
+
+
 X = [ones(size(z_m1A)) z_m1A z_m1A.^2 z_m1A.^3]./Xnum_Fe_m1A;
 Y = 1./Fe_m1A;
 R = X'*X;
@@ -22,7 +24,9 @@ P = X'*Y;
 A_Fe = inv(R)*P;
 
 %Création de la fonction Fe
+
 Fe_mc_1mA = Xnum_Fe_m1A./(A_Fe(1) + A_Fe(2).*z_m1A + A_Fe(3).*z_m1A.^2 + A_Fe(4).*z_m1A.^3)
+
 
 %Calcul des erreurs RMS et corrélation E
 E = sum((Fe_mc_1mA - Fe_m1A).^2);
