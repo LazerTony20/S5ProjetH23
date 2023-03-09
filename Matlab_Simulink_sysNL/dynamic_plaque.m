@@ -1,6 +1,6 @@
 clc
 close all
-clear all
+clear 
 
 load("donnees_prof_nl.mat")
 %%%%%%%%%%%%%%%%
