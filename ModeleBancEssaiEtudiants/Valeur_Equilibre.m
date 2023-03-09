@@ -20,28 +20,28 @@ zE_e  = Pz_plaque - XE*Ay_eq + YE*Ax_eq;
 zF_e  = Pz_plaque - XF*Ay_eq + YF*Ax_eq;
 
 
-C_i2A = -1/(ae0 + ae1*zA_e + ae2*zA_e^2 + ae3*zA_e^3);
-C_i1A = be/(ae0 + ae1*zA_e + ae2*zA_e^2 + ae3*zA_e^3);
-C_i0A = -Matrice_Force(1) + -1/(as0 + as1*zA_e + as2*zA_e^2 + as3*zA_e^3);
+K_i2A = -1/(ae0 + ae1*zA_e + ae2*zA_e^2 + ae3*zA_e^3);
+K_i1A = be/(ae0 + ae1*zA_e + ae2*zA_e^2 + ae3*zA_e^3);
+K_i0A = -Matrice_Force(1) + -1/(as0 + as1*zA_e + as2*zA_e^2 + as3*zA_e^3);
 
-i_A = roots([C_i2A C_i1A C_i0A]);
+i_A = roots([K_i2A K_i1A K_i0A]);
 idx = i_A>=0;
 i_A(idx) = [];
 
-C_i2B = -1/(ae0 + ae1*zB_e + ae2*zB_e^2 + ae3*zB_e^3);
-C_i1B = be/(ae0 + ae1*zB_e + ae2*zB_e^2 + ae3*zB_e^3);
-C_i0B = -Matrice_Force(1) + -1/(as0 + as1*zB_e + as2*zB_e^2 + as3*zB_e^3);
+K_i2B = -1/(ae0 + ae1*zB_e + ae2*zB_e^2 + ae3*zB_e^3);
+K_i1B = be/(ae0 + ae1*zB_e + ae2*zB_e^2 + ae3*zB_e^3);
+K_i0B = -Matrice_Force(1) + -1/(as0 + as1*zB_e + as2*zB_e^2 + as3*zB_e^3);
 
 
-i_B = roots([C_i2B C_i1B C_i0B]);
+i_B = roots([K_i2B K_i1B K_i0B]);
 idx = i_B>=0;
 i_B(idx) = [];
 
-C_i2C = -1/(ae0 + ae1*zC_e + ae2*zC_e^2 + ae3*zC_e^3);
-C_i1C = be/(ae0 + ae1*zC_e + ae2*zC_e^2 + ae3*zC_e^3);
-C_i0C = -Matrice_Force(1) + -1/(as0 + as1*zC_e + as2*zC_e^2 + as3*zC_e^3);
+K_i2C = -1/(ae0 + ae1*zC_e + ae2*zC_e^2 + ae3*zC_e^3);
+K_i1C = be/(ae0 + ae1*zC_e + ae2*zC_e^2 + ae3*zC_e^3);
+K_i0C = -Matrice_Force(1) + -1/(as0 + as1*zC_e + as2*zC_e^2 + as3*zC_e^3);
 
-i_C = roots([C_i2C C_i1C C_i0C]);
+i_C = roots([K_i2C K_i1C K_i0C]);
 idx = i_C>=0;
 i_C(idx) = [];
 
