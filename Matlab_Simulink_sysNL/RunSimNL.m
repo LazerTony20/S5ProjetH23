@@ -53,3 +53,21 @@ poly_as = [as3 as2 as1 as0];
 
 
 simout = sim('Full_model','StartTime',string(tsim(1)),'StopTime',string(tsim(end)),'FixedStep',string(0.001));
+
+
+
+
+figure()
+hold on
+plot(simout.pos_x_sphere.time,simout.pos_x_sphere.data)
+hold off
+
+figure()
+hold on
+plot(simout.pos_y_sphere.time, simout.pos_y_sphere.data)
+hold off
+
+
+
+
+
