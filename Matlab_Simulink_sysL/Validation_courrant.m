@@ -42,6 +42,6 @@ figure()
 hold on
 subplot(2,1,1);
 simout = sim("test_ABCD", "StartTime", '0', "StopTime", '50', "FixedStep", '0.0001');
-plot(simout.delta_iA2.time, simout.delta_iA2.data + Ia_e)
+plot(simout.delta_iA.time, simout.delta_iA.data + Ia_e)
 subplot(2,1,2);
-plot(tsim, IC)
+plot(tsim, IA)
