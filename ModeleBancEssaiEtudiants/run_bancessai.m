@@ -33,5 +33,35 @@ open_system('DYNctl_ver4_etud_obfusc')
 set_param('DYNctl_ver4_etud_obfusc','AlgebraicLoopSolver','LineSearch')
 sim('DYNctl_ver4_etud_obfusc')
 
+save('Variable_etat_lineaire.mat', 'Vetats');
+save('Sorties_ZDEF.mat', 'Vsorties');
 %affichage
 %trajectoires
+
+
+
+%%
+load('donnees_prof_nl.mat')
+load('Variable_etat_lineaire.mat')
+load('Sorties_ZDEF.mat')
+
+Vetats_prof = [Ax Ay Pz Wx Wy Vz Px Py Vx Vy IA IB IC];
+Vsorties_prof = [zD zE zF];
+
+data_to_show = 3;
+figure();
+subplot(2,1,1);
+plot(Vetats.time, Vetats.data(:,data_to_show))
+xlim([10,50])
+subplot(2,1,2);
+plot(tsim, Vetats_prof(:,data_to_show))
+xlim([10,50])
+
+data_to_show = 1;
+figure();
+subplot(2,1,1);
+plot(Vsorties.time, Vsorties.data(:,data_to_show))
+xlim([10,50])
+subplot(2,1,2);
+plot(tsim, Vsorties_prof(:,data_to_show))
+xlim([10,50])
