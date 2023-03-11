@@ -1,18 +1,8 @@
 
 Constante_L
+Valeur_Equilibre
 
-%%%% Décommentez ces lignes si le fichier n'est pas roulez à partir du banc
-%%%% d'essaie
-% Entrez les valeurs à l'équilibre voulu 
-% sig = 1.0;         % Présence (1) ou non (0) de la sphère
-% xSeq = 0.000;      % Position x de la sphère à l'équilibre en metres
-% ySeq = 0.000;      % Position y de la sphère à l'équilibre en metres
-% 
-% %Point d'opération choisi pour la plaque
-% Axeq = 0;               %en degres
-% Ayeq = 0;               %en degres
-% Pzeq = .015;            %en metres
-% Valeur_Equilibre
+
 %Format des vecteurs:
 %[delta_aX delta_aY delta_Pz delta_aX' delta_aY' delta_Pz' delta_Px delta_Py delta_Px' delta_Py' delta_IA delta_IB delta_IC]
 %[delta_Va delta_Vb delta_Vc]

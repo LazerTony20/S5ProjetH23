@@ -4,15 +4,8 @@ load("donnees_prof_nl.mat")
 load("Sorties_zDEF.mat")
 load("Variable_etat_lineaire.mat")
 Constante_L
-% Entrez les valeurs à l'équilibre voulu. 
-Px_sphere = 0;
-Py_sphere = 0;
-Pz_plaque = 0.015;
-Ax_eq = 0;
-Ay_eq = 0;
-%
 Valeur_Equilibre
-equation_linaire
+equation_lineaire
 
 %% Valider zD
 

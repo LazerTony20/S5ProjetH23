@@ -4,11 +4,16 @@
 % post-validation du calcul devra être fait avant d'être accepté comme
 % valeur.
 
-Px_sphere = xSeq;
-ySeq = ySeq;
-Pzeq = Pzeq;
-Axeq = Axeq;
-Ayeq = Ayeq;
+%%Décommentez cette ligne si on roule pas à partir du banc d'essaie
+% % Position à l'équilibre de la sphère (pour tests statiques)
+% sig = 1.0;         % Présence (1) ou non (0) de la sphère
+% xSeq = 0.000;      % Position x de la sphère à l'équilibre en metres
+% ySeq = 0.000;      % Position y de la sphère à l'équilibre en metres
+% 
+% %Point d'opération choisi pour la plaque
+% Axeq = 0;               %en degres
+% Ayeq = 0;               %en degres
+% Pzeq = .015;            %en metres
 
 Matrice_X = [1 1 1;
                 0 YB YC;
