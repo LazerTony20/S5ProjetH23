@@ -20,8 +20,10 @@ z_des     = [t_des, [1 1 1 1  1  1 1 1 1]'*.015];
 tfin = 50;
 
 %initialisation
-bancEssaiConstantes
+
 %bancessai_ini  %faites tous vos calculs de modele ici
+bancEssaiConstantes
+equation_lineaire
 
 %Calcul des compensateurs
 %iniCTL_ver4    %Calculez vos compensateurs ici
@@ -31,35 +33,9 @@ open_system('DYNctl_ver4_etud_obfusc')
 set_param('DYNctl_ver4_etud_obfusc','AlgebraicLoopSolver','LineSearch')
 sim('DYNctl_ver4_etud_obfusc')
 
-%affichage
-%trajectoires
+save('Variable_etat_lineaire.mat', 'Vetats');
+save('Sorties_ZDEF.mat', 'Vsorties');
 
-%% Créer le fichier .mat
-Ax = ynonlineaire(:,1);
-Ay = ynonlineaire(:,2);
-Pz = ynonlineaire(:,3);
-Wx = ynonlineaire(:,4);
-Wy = ynonlineaire(:,5);
-Vz = ynonlineaire(:,6);
-Px = ynonlineaire(:,7);
-Py = ynonlineaire(:,8);
-Vx = ynonlineaire(:,9);
-Vy = ynonlineaire(:,10);
-IA = ynonlineaire(:,11);
-IB = ynonlineaire(:,12);
-IC = ynonlineaire(:,13);
-zA = ynonlineaire(:,14);
-zB = ynonlineaire(:,15);
-zC = ynonlineaire(:,16);
-zD = ynonlineaire(:,17);
-zE = ynonlineaire(:,18);
-zF = ynonlineaire(:,19);
-FA = ynonlineaire(:,20);
-FB = ynonlineaire(:,21);
-FC = ynonlineaire(:,22);
-VA = ynonlineaire(:,23);
-VB = ynonlineaire(:,24);
-VC = ynonlineaire(:,25);
 
-save donnees_prof_nl.mat tsim Ax Ay Pz Wx Wy Vz Px Py Vx Vy IA IB IC zA zB zC zD zE zF FA FB FC VA VB VC
+
 
