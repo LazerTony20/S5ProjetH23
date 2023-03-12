@@ -98,15 +98,15 @@ grid on
 
 
 %% Comparaison avec le prof (matlab)
-a_z = (FA + FB + FC + Fg)/mP;
+a_z = (FA + FB + FC + Fg)/mp;
 v_z = cumtrapz(tsim, a_z); %Équivalent à l'intégrator
 z = cumtrapz(tsim, v_z)+0.015; %Équivalent à l'integrator
 
-a_phi = -(FA.*XA + FB.*XB + FC*XC + Fg_sphere*Px)/Jp;
+a_phi = -(FA.*XA + FB.*XB + FC*XC + Fg_s*Px)/Jp;
 w_phi = cumtrapz(tsim, a_phi); %Équivalent à l'intégrator
 phi = cumtrapz(tsim, w_phi); %Équivalent à l'integrator
 
-a_theta = (FA.*YA + FB.*YB + FC*YC + Fg_sphere*Py)/Jp;
+a_theta = (FA.*YA + FB.*YB + FC*YC + Fg_s*Py)/Jp;
 w_theta = cumtrapz(tsim, a_theta); %Équivalent à l'intégrator
 theta = cumtrapz(tsim, w_theta); %Équivalent à l'integrator
 

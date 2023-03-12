@@ -71,12 +71,14 @@ Fg_sphere   = masseS*g;         % N - poids de la sphère
 
 % Plaque
 masseP = 425e-03;     % kg
+mP = masseP;
 inertiePx =  1.347*10^-3;  % kg m^2
 inertiePy =  inertiePx;             % kg m^2
 Jz = 2329e-06;  % kg m^2
 masseTotal = masseP + sig*masseS;   % kg - mase totale plaque + sphère
 Fg_total = masseTotal*g;
-
+Fg = masseTotal*g;
+Jp = 1.347*10^-3;
 % Simulation
 Vmax = 16.0;
 
