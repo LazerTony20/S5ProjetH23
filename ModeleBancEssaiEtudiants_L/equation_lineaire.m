@@ -18,21 +18,21 @@ delta_dAz = [0 0 0 0 0 1 0 0 0 0 0 0 0];
 
 % Équation linéaire des Forces
 C1_zsA = -(as1 + 2*as2*zA_e +3*as3*zA_e^2)/(as0 + as1*zA_e + as2*zA_e^2 +as3*zA_e^3)^2;
-C1_zeA = -(Ia_e*abs(Ia_e) + be*Ia_e)*(ae1 + ae2*zA_e +ae3*zA_e^2)/(ae0 + ae1*zA_e + ae2*zA_e^2 +ae3*zA_e^3)^2;
+C1_zeA = -(Ia_e*abs(Ia_e) + be*Ia_e)*(ae1 + 2*ae2*zA_e +3*ae3*zA_e^2)/(ae0 + ae1*zA_e + ae2*zA_e^2 +ae3*zA_e^3)^2;
 C1_ieA = (2*abs(Ia_e) + be)/(ae0 + ae1*zA_e + ae2*zA_e^2 +ae3*zA_e^3);
 C1_zA = C1_zsA + C1_zeA;
 C1_iA = C1_ieA;
 FA_L = [C1_zA, C1_iA];
 
 C1_zsB = -(as1 + 2*as2*zB_e +3*as3*zB_e^2)/(as0 + as1*zB_e + as2*zB_e^2 +as3*zB_e^3)^2;
-C1_zeB = -(Ib_e*abs(Ib_e) + be*Ib_e)*(ae1 + ae2*zB_e +ae3*zB_e^2)/(ae0 + ae1*zB_e + ae2*zB_e^2 +ae3*zB_e^3)^2;
+C1_zeB = -(Ib_e*abs(Ib_e) + be*Ib_e)*(ae1 + 2*ae2*zB_e +3*ae3*zB_e^2)/(ae0 + ae1*zB_e + ae2*zB_e^2 +ae3*zB_e^3)^2;
 C1_ieB = (2*abs(Ib_e) + be)/(ae0 + ae1*zB_e + ae2*zB_e^2 +ae3*zB_e^3);
 C1_zB = C1_zsB + C1_zeB;
 C1_iB = C1_ieB;
 FB_L = [C1_zB, C1_iB];
 
 C1_zsC = -(as1 + 2*as2*zC_e +3*as3*zC_e^2)/(as0 + as1*zC_e + as2*zC_e^2 +as3*zC_e^3)^2;
-C1_zeC = -(Ic_e*abs(Ic_e) + be*Ic_e)*(ae1 + ae2*zC_e +ae3*zC_e^2)/(ae0 + ae1*zC_e + ae2*zC_e^2 +ae3*zC_e^3)^2;
+C1_zeC = -(Ic_e*abs(Ic_e) + be*Ic_e)*(ae1 + 2*ae2*zC_e +3*ae3*zC_e^2)/(ae0 + ae1*zC_e + ae2*zC_e^2 +ae3*zC_e^3)^2;
 C1_ieC = (2*abs(Ic_e) + be)/(ae0 + ae1*zC_e + ae2*zC_e^2 +ae3*zC_e^3);
 C1_zC = C1_zsC + C1_zeC;
 C1_iC = C1_ieC;
@@ -61,7 +61,7 @@ delta_ddAx = (1/inertieP)*[C3_deltaAx C3_deltaAy C3_deltaZ  0 0 0 0 C3_deltaPx  
 C4_deltaAx = (FA_L(1)*XA*YA+FB_L(1)*XB*YB + FC_L(1)*XC*YC);
 C4_deltaAy = -1*(FA_L(1)*XA*XA+FB_L(1)*XB*XB + FC_L(1)*XC*XC);
 C4_deltaZ = (FA_L(1)*YA+FB_L(1)*YB + FC_L(1)*YC);
-C4_deltaPy = -Fg_sphere;
+C4_deltaPy = Fg_sphere;
 C4_deltaIA = FA_L(2)*XA;
 C4_deltaIB = FB_L(2)*XB;
 C4_deltaIC = FC_L(2)*XC;

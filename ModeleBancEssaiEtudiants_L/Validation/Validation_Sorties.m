@@ -5,7 +5,6 @@ load("Sorties_zDEF.mat")
 load("Variable_etat_lineaire.mat")
 Constante_L
 Valeur_Equilibre
-equation_lineaire
 
 %% Valider zD
 
