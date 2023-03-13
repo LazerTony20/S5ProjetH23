@@ -120,7 +120,12 @@ A_fs = A_cor
 
 save coefficients A_fs A_fe
 
+%% Comparaison avec l'équation linéaire
+Constante_L
+equation_lineaire
 
-
+actionneur_lineaire = FA_L(1).*(z_m1A - Pz_e) + FA_L(2).*(-0.001 - Ia_e);
+plot(z_m1A, actionneur_lineaire)
+plot(z_m1A, Fe_m1A + Fs)
 
     
