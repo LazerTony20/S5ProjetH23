@@ -57,14 +57,16 @@ simout = sim('Full_model','StartTime',string(tsim(1)),'StopTime',string(tsim(end
 
 
 
-figure()
+figure('Name','Position x de la sphere')
 hold on
 plot(simout.pos_x_sphere.time,simout.pos_x_sphere.data)
+grid on
 hold off
 
-figure()
+figure('Name','Position Y de la sphere')
 hold on
 plot(simout.pos_y_sphere.time, simout.pos_y_sphere.data)
+grid on
 hold off
 
 
