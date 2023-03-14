@@ -32,9 +32,9 @@ Fe_mc_1mA = Xnum_Fe_m1A./(A_Fe(1) + A_Fe(2).*z_m1A + A_Fe(3).*z_m1A.^2 + A_Fe(4)
 E = sum((Fe_mc_1mA - Fe_m1A).^2);
 N = size(Fe_mc_1mA);
 N = N(1)
-RMS = ((1/N)*E).^0.5;
+RMS_fe_1mA = ((1/N)*E).^0.5;
 Y_R2 = (1/N)*sum(Fe_m1A);
-R_2 = sum((Fe_mc_1mA - Y_R2).^2)/sum((Fe_m1A-Y_R2).^2);
+R_2_fe_1mA = sum((Fe_mc_1mA - Y_R2).^2)/sum((Fe_m1A-Y_R2).^2);
 
 %Affichage sur graphique
 figure();
@@ -54,9 +54,9 @@ plot(z_m2A, Fe_m2A)
 E = sum((Fe_mc_2mA - Fe_m2A).^2);
 N = size(Fe_mc_2mA);
 N = N(1)
-RMS = ((1/N)*E).^0.5;
+RMS_fe_2mA = ((1/N)*E).^0.5;
 Y_R2 = (1/N)*sum(Fe_m2A);
-R_2 = sum((Fe_mc_2mA - Y_R2).^2)/sum((Fe_m2A-Y_R2).^2);
+R_2_fe_2mA = sum((Fe_mc_2mA - Y_R2).^2)/sum((Fe_m2A-Y_R2).^2);
 
 % %%
 % Y = (Fs.^(-1));
@@ -110,9 +110,9 @@ Fs = Fs(1:end-Value_to_remove);
 E = sum((Fs_mc - Fs).^2);
 N = size(Fs_mc);
 N = N(1);
-RMS = ((1/N)*E).^0.5;
+RMS_fs = ((1/N)*E).^0.5;
 Y_R2 = (1/N)*sum(Fs);
-R_2 = sum((Fs_mc - Y_R2).^2)/sum((Fs-Y_R2).^2);
+R_2_fs = sum((Fs_mc - Y_R2).^2)/sum((Fs-Y_R2).^2);
 
 %% Écrire les coefficient
 A_fe = A_Fe;
