@@ -7,20 +7,20 @@
 %%Décommentez cette ligne si on roule pas à partir du banc d'essaie
 % Position à l'équilibre de la sphère (pour tests statiques)
 sig = 1.0;         % Présence (1) ou non (0) de la sphère
-xSeq = 0.000;      % Position x de la sphère à l'équilibre en metres
-ySeq = 0.000;      % Position y de la sphère à l'équilibre en metres
+xSeq = 0.1;      % Position x de la sphère à l'équilibre en metres
+ySeq = 0.1;      % Position y de la sphère à l'équilibre en metres
 
 %Point d'opération choisi pour la plaque
-Axeq = 0;               %en degres
-Ayeq = 0;               %en degres
+Axeq = 0.00;               %en degres
+Ayeq = 0.00;               %en degres
 Pzeq = .015;            %en metres
 
 Matrice_X = [1 1 1;
                 0 YB YC;
-                XA XB XC];
+                -XA -XB -XC];
 Matrice_Y = [-Fg_total;
             -Fg_sphere*ySeq;
-            -Fg_sphere*xSeq];
+            Fg_sphere*xSeq];
 Matrice_Force = linsolve(Matrice_X, Matrice_Y);
 
 zA_e = Pzeq - XA*Ayeq + YA*Axeq;
@@ -41,7 +41,7 @@ i_A(idx) = [];
 
 K_i2B = -1/(ae0 + ae1*zB_e + ae2*zB_e^2 + ae3*zB_e^3);
 K_i1B = be/(ae0 + ae1*zB_e + ae2*zB_e^2 + ae3*zB_e^3);
-K_i0B = -Matrice_Force(1) + -1/(as0 + as1*zB_e + as2*zB_e^2 + as3*zB_e^3);
+K_i0B = -Matrice_Force(2) + -1/(as0 + as1*zB_e + as2*zB_e^2 + as3*zB_e^3);
 
 
 i_B = roots([K_i2B K_i1B K_i0B]);
@@ -50,7 +50,7 @@ i_B(idx) = [];
 
 K_i2C = -1/(ae0 + ae1*zC_e + ae2*zC_e^2 + ae3*zC_e^3);
 K_i1C = be/(ae0 + ae1*zC_e + ae2*zC_e^2 + ae3*zC_e^3);
-K_i0C = -Matrice_Force(1) + -1/(as0 + as1*zC_e + as2*zC_e^2 + as3*zC_e^3);
+K_i0C = -Matrice_Force(3) + -1/(as0 + as1*zC_e + as2*zC_e^2 + as3*zC_e^3);
 
 i_C = roots([K_i2C K_i1C K_i0C]);
 idx = i_C>=0;
