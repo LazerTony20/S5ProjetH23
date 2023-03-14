@@ -22,6 +22,7 @@ tfin = 50;
 %initialisation
 bancEssaiConstantes
 %bancessai_ini  %faites tous vos calculs de modele ici
+load("coefficients.mat")
 
 %Calcul des compensateurs
 %iniCTL_ver4    %Calculez vos compensateurs ici
@@ -61,5 +62,5 @@ VA = ynonlineaire(:,23);
 VB = ynonlineaire(:,24);
 VC = ynonlineaire(:,25);
 
-save donnees_prof_nl.mat tsim Ax Ay Pz Wx Wy Vz Px Py Vx Vy IA IB IC zA zB zC zD zE zF FA FB FC VA VB VC
+% save donnees_prof_nl.mat tsim Ax Ay Pz Wx Wy Vz Px Py Vx Vy IA IB IC zA zB zC zD zE zF FA FB FC VA VB VC
 

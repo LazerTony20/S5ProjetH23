@@ -55,8 +55,6 @@ poly_as = [as3 as2 as1 as0];
 simout = sim('Full_model','StartTime',string(tsim(1)),'StopTime',string(tsim(end)),'FixedStep',string(0.001));
 
 
-
-
 figure('Name','Position x de la sphere')
 hold on
 plot(simout.pos_x_sphere.time,simout.pos_x_sphere.data)
