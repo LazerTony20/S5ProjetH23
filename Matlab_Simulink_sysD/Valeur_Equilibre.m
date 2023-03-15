@@ -7,8 +7,8 @@
 %%Décommentez cette ligne si on roule pas à partir du banc d'essaie
 % Position à l'équilibre de la sphère (pour tests statiques)
 sig = 1.0;         % Présence (1) ou non (0) de la sphère
-xSeq = 0.1;      % Position x de la sphère à l'équilibre en metres
-ySeq = 0.1;      % Position y de la sphère à l'équilibre en metres
+xSeq = 0.0;      % Position x de la sphère à l'équilibre en metres
+ySeq = 0.0;      % Position y de la sphère à l'équilibre en metres
 
 %Point d'opération choisi pour la plaque
 Axeq = 0.00;               %en degres
