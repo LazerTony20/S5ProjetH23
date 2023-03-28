@@ -37,8 +37,8 @@ F=10;
 % Spécifications dérivées
 Phi_theta_phi = atand(-pi/log(Mp_theta_phi/100));
 Zeta_theta_phi = cosd(Phi_theta_phi);
-wn_ts2pc = 4./(ts2pc_theta_phi*Zeta_theta_phi);
-wn_tr_10_90 = (1+1.1*Zeta_theta_phi+1.4*Zeta_theta_phi^2)./tr_10_90_theta_phi;
+wn_ts2pc = 4./(ts2pc_theta_phi.*Zeta_theta_phi);
+wn_tr_10_90 = (1 + 1.1.*Zeta_theta_phi +1.4.*(Zeta_theta_phi.^2))./tr_10_90_theta_phi;
 wn_tp = pi/(tp_theta_phi.*sqrt(1-Zeta_theta_phi^2));
 wn_theta_phi = wn_ts2pc;
 wa_theta_phi = wn_theta_phi*sqrt(1-Zeta_theta_phi^2);
@@ -53,7 +53,6 @@ if showGraphicsAndData == 1
     disp(['ωn dérivé de tp         = ', num2str(wn_tp), ' rad/s'])
     disp(' ')
     disp(['ωa dérivé de ωn         = ', num2str(wa_theta_phi), ' rad/s'])
-    disp(' ')
     disp('Les pôles désirés sont à :')
     disp(num2str(p_des_theta_phi(1)))
     disp(num2str(p_des_theta_phi(2)))
@@ -63,7 +62,6 @@ end
 [numFT_theta_phi,denFT_theta_phi] = tfdata(FT_theta_phi,'v');
 
 Kpos_now_theta_phi = numFT_theta_phi(end)./denFT_theta_phi(end);
-% Kpos_theta_phi=1;
 Kvel_des = 100;
 Zpi = real(s_des_theta_phi)./F;
 Ki_theta_phi = Kvel_des./Kpos_now_theta_phi;
