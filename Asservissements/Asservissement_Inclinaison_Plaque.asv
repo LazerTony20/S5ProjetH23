@@ -6,17 +6,18 @@ clear
 clc
 
 % Contrôle de l'affichage et FT
-showGraphicsAndData = 1;
-useLocalTransferFunction = 1;
-
+showGraphicsAndData = 1;            % Variable pour l'affichage des figures et infos dans le terminal
+showIntermediaryGraphs = 1;         % Variable pour montrer les graphiques des fonctions intermédiaires
+useLocalTransferFunction = 1;       % Variable pour l'utilisation de la FT hard-codée (et non une externe)
+useLocalResponseSimulation = 1;     % Variable pour l'exécution de la simulation
 
 % Fonction de transfert en entrée
 if useLocalTransferFunction == 0
-    FT_theta_phi = 0;% besoin de FT
+    FT_Inc_Plaque = 0;% Utilisation d'une FT Externe
 else  
-    numFT_theta_phi = [9744];
-    denFT_theta_phi = [1 31.3 -1767 -55320];
-    FT_theta_phi = tf(numFT_theta_phi,denFT_theta_phi);
+    numFT_Inc_Plaque = [9744];
+    denFT_Inc_Plaque = [1 31.3 -1767 -55320];
+    FT_Inc_Plaque = tf(numFT_Inc_Plaque,denFT_Inc_Plaque);
 end
 
 % Spécifications
@@ -26,68 +27,167 @@ end
 % ➢ temps de montée (10-90%) : 𝑡𝑟𝜃𝜑 = 0.020 s
 % ➢ erreur en régime permanent à une consigne échelon : nulle
 
-Mp_theta_phi = 5;           % En pourcent
-ts2pc_theta_phi = 0.030;    % En secondes
-tp_theta_phi = 0.025;       % En secondes
-tr_10_90_theta_phi = 0.020; % En secondes
+Mp_Inc_Plaque = 5;           % En pourcent
+ts2pc_Inc_Plaque = 0.030;    % En secondes
+tp_Inc_Plaque = 0.025;       % En secondes
+tr_10_90_Inc_Plaque = 0.020; % En secondes
+
+% Valeurs 
+F=10;
 
 % Spécifications dérivées
-Phi_theta_phi = atand(-pi/log(Mp_theta_phi/100));
-Zeta_theta_phi = cosd(Phi_theta_phi);
-wn_ts2pc = 4/(ts2pc_theta_phi*Zeta_theta_phi);
-wn_tr_10_90 = (1+1.1*Zeta_theta_phi+1.4*Zeta_theta_phi^2)/tr_10_90_theta_phi;
-wn_tp = pi/(tp_theta_phi*sqrt(1-Zeta_theta_phi^2));
-wn_theta_phi = wn_ts2pc;
-wa_theta_phi = wn_theta_phi*sqrt(1-Zeta_theta_phi^2);
-p_des_theta_phi = [((-wn_theta_phi*Zeta_theta_phi) + wa_theta_phi.*1i); ((-wn_theta_phi*Zeta_theta_phi) - wa_theta_phi.*1i)];
-s_des_theta_phi = p_des_theta_phi(1);
+Phi_Inc_Plaque = atand(-pi/log(Mp_Inc_Plaque/100));
+Zeta_Inc_Plaque = cosd(Phi_Inc_Plaque);
+wn_ts2pc_Inc_Plaque = 4./(ts2pc_Inc_Plaque.*Zeta_Inc_Plaque);
+wn_tr_10_90_Inc_Plaque = (1 + 1.1.*Zeta_Inc_Plaque +1.4.*(Zeta_Inc_Plaque.^2))./tr_10_90_Inc_Plaque;
+wn_tp_Inc_Plaque = pi/(tp_Inc_Plaque.*sqrt(1-Zeta_Inc_Plaque^2));
+wn_Inc_Plaque = wn_ts2pc_Inc_Plaque;
+wa_Inc_Plaque = wn_Inc_Plaque*sqrt(1-Zeta_Inc_Plaque^2);
+p_des_Inc_Plaque = [((-wn_Inc_Plaque*Zeta_Inc_Plaque) + wa_Inc_Plaque.*1i); ((-wn_Inc_Plaque*Zeta_Inc_Plaque) - wa_Inc_Plaque.*1i)];
+s_des_Inc_Plaque = p_des_Inc_Plaque(1);
+% Affichage des spécifications dérivées
 if showGraphicsAndData == 1
-    disp(['Φ = ', num2str(Phi_theta_phi)])
-    disp(['ζ = ', num2str(Zeta_theta_phi)])
+    disp(['Φ = ', num2str(Phi_Inc_Plaque)])
+    disp(['ζ = ', num2str(Zeta_Inc_Plaque)])
     disp(' ')
-    disp(['ωn dérivé de ts(2%)     = ', num2str(wn_ts2pc), ' rad/s  <----'])
-    disp(['ωn dérivé de tr(10-90%) = ', num2str(wn_tr_10_90), ' rad/s'])
-    disp(['ωn dérivé de tp         = ', num2str(wn_tp), ' rad/s'])
+    disp(['ωn dérivé de ts(2%)     = ', num2str(wn_ts2pc_Inc_Plaque), ' rad/s  <----'])
+    disp(['ωn dérivé de tr(10-90%) = ', num2str(wn_tr_10_90_Inc_Plaque), ' rad/s'])
+    disp(['ωn dérivé de tp         = ', num2str(wn_tp_Inc_Plaque), ' rad/s'])
     disp(' ')
-    disp(['ωa dérivé de ωn         = ', num2str(wa_theta_phi), ' rad/s'])
-    disp(' ')
+    disp(['ωa dérivé de ωn         = ', num2str(wa_Inc_Plaque), ' rad/s'])
     disp('Les pôles désirés sont à :')
-    disp(num2str(p_des_theta_phi(1)))
-    disp(num2str(p_des_theta_phi(2)))
+    disp(num2str(p_des_Inc_Plaque(1)))
+    disp(num2str(p_des_Inc_Plaque(2)))
     disp(' ')
 end
 
-[numFT_theta_phi,denFT_theta_phi] = tfdata(FT_theta_phi,'v');
+[numFT_Inc_Plaque,denFT_Inc_Plaque] = tfdata(FT_Inc_Plaque,'v');
+
+% Compensateur Double AvPh
+Alpha_Inc_Plaque = 180 - Phi_Inc_Plaque;
+DeltaPhi_Inc_Plaque = -180 - rad2deg(angle(polyval(numFT_Inc_Plaque,s_des_Inc_Plaque))-angle(polyval(denFT_Inc_Plaque,s_des_Inc_Plaque)))-360;
+
+Phi_Z_Inc_Plaque = (Alpha_Inc_Plaque + DeltaPhi_Inc_Plaque./2)./2;
+Phi_P_Inc_Plaque = (Alpha_Inc_Plaque - DeltaPhi_Inc_Plaque./2)./2;
+Za_pos_Inc_Plaque = real(s_des_Inc_Plaque) - (imag(s_des_Inc_Plaque)./tand(Phi_Z_Inc_Plaque));
+Pa_pos_Inc_Plaque = real(s_des_Inc_Plaque) - (imag(s_des_Inc_Plaque)./tand(Phi_P_Inc_Plaque));
+Ka_AvPh_Inc_Plaque = 1./abs((((s_des_Inc_Plaque - Za_pos_Inc_Plaque).^2)./((s_des_Inc_Plaque - Pa_pos_Inc_Plaque)).^2).*(polyval(numFT_Inc_Plaque,s_des_Inc_Plaque)./polyval(denFT_Inc_Plaque,s_des_Inc_Plaque)));
+
+AvPh_Temp_Inc_Plaque=tf([1 -Za_pos_Inc_Plaque],[1 -Pa_pos_Inc_Plaque]);
+AvPh_Inc_Plaque = AvPh_Temp_Inc_Plaque*AvPh_Temp_Inc_Plaque*Ka_AvPh_Inc_Plaque;
+[numAvPh_Inc_Plaque, denAvPh_Inc_Plaque] = tfdata(AvPh_Inc_Plaque,'v');
+
+AvPh_FT_Inc_Plaque = AvPh_Inc_Plaque*FT_Inc_Plaque;
+[numAvPh_FT_Inc_Plaque, denAvPh_FT_Inc_Plaque] = tfdata(AvPh_FT_Inc_Plaque,'v')
+
+if showGraphicsAndData ==1
+    disp('======Compensateur AvPh======')
+    disp(['Avance de phase requise selon les spécifications = ', num2str(DeltaPhi_Inc_Plaque), ' deg'])
+    disp(['Avance de phase requise / 2 (car double AvPh) = ', num2str(DeltaPhi_Inc_Plaque./2), ' deg'])
+    disp(' ')
+    disp(['La position du zero de l`AvPh est ', num2str(Za_pos_Inc_Plaque)])
+    disp(['La position du pôle de l`AvPh est ', num2str(Pa_pos_Inc_Plaque)])
+    disp(['Le gain de l`AvPh est ', num2str(Ka_AvPh_Inc_Plaque)])
+    disp(' ')
+    disp('La fonciton de transfert de l`AvPh est : ')
+    AvPh_Inc_Plaque
+    % Affichage des figures
+    if showIntermediaryGraphs == 1
+        % Lieu des racines
+        figure('Name','RootLocus FT theta et phi ainsi que une AvPh')
+        hold on
+        rlocus(FT_Inc_Plaque,'b')
+        rlocus(AvPh_FT_Inc_Plaque,'r')
+        p_des_avph_rl = rlocus(AvPh_FT_Inc_Plaque,1);
+        plot(real(p_des_Inc_Plaque),imag(p_des_Inc_Plaque),'p','MarkerEdgeColor','b')
+        plot(real(p_des_avph_rl),imag(p_des_avph_rl),'s','MarkerEdgeColor','g')
+        legend('FT','FT + AvPh','Pôles désirés','Pôles obtenus','Location','North')
+        title('RootLocus FT \theta et \Phi et FT une AvPh')
+        axis([-200 200 -200 200])
+        hold off
+        % Lieu de Bode
+        figure('Name','Lieu de Bode FT et FT + AvPh')
+        hold on
+        margin(FT_Inc_Plaque,'b')
+        margin(AvPh_FT_Inc_Plaque,'r')
+        legend('FT','Ft + AvPh')
+        title('Lieu de Bode de la FT et FT + AvPH')
+        grid on
+        hold off
+    end
+end
 
 
-Kpos_theta_phi = numFT_theta_phi(end)./denFT_theta_phi(end);
+% Compensateur PI Simple
+Zpi_Inc_Plaque = real(s_des_Inc_Plaque)./F;
+numPI_Inc_Plaque = [1 -Zpi_Inc_Plaque];
+denPI_Inc_Plaque = [1 0];
+PI_Inc_Plaque = tf(numPI_Inc_Plaque,denPI_Inc_Plaque);
 
-F=10;
-% Kpos_theta_phi=1;
-Kvel_des=100;
-Zpi = real(s_des_theta_phi)/F;
-Ki_theta_phi = Kvel_des./Kpos_theta_phi;
-Kp_theta_phi = Ki_theta_phi./Zpi;
-
-numPI_theta_phi = [1 -Zpi];
-denPI_theta_phi = [1 0];
-PI_theta_phi = Kp_theta_phi*tf(numPI_theta_phi,denPI_theta_phi)
-FT_theta_phi_PI = PI_theta_phi*FT_theta_phi;
+AvPh_FT_PI_Inc_Plaque = AvPh_FT_Inc_Plaque*PI_Inc_Plaque;
 
 
 if showGraphicsAndData == 1
+    disp('==========Compensateur PI Simple==========')
+    disp(' ')
+    disp('La fonction de transfert du PI est : ')
+    PI_Inc_Plaque
+    % Affichage des figures
     figure('Name','RootLocus FT theta et phi ainsi que leur PI')
     hold on
-    rlocus(FT_theta_phi,'b')
-    rlocus(FT_theta_phi_PI,'r')
-    p_des_rl = rlocus(FT_theta_phi_PI,1);
-    plot(real(p_des_theta_phi),imag(p_des_theta_phi),'p','MarkerEdgeColor','b')
-    plot(real(p_des_rl),imag(p_des_rl),'s','MarkerEdgeColor','g')
-    legend('FT','FT_PI','Pôles désirés','Pôles obtenus','Location','NorthWest')
-    title('RootLocus FT \theta et \Phi et leur PI')
-%     axis([-400 40 -100 100])
+    rlocus(FT_Inc_Plaque,'b')
+    rlocus(AvPh_FT_Inc_Plaque,'r')
+    rlocus(AvPh_FT_PI_Inc_Plaque,'g')
+    plot(real(p_des_Inc_Plaque),imag(p_des_Inc_Plaque),'p','MarkerEdgeColor','b')
+    plot(real(p_des_avph_rl),imag(p_des_avph_rl),'s','MarkerEdgeColor','g')
+    
+    
+    
+    plot(real(p_des_Inc_Plaque),imag(p_des_Inc_Plaque),'p','MarkerEdgeColor','b')
+    p_des_avph_rl = rlocus(AvPh_FT_Inc_Plaque,1);
+    plot(real(p_des_avph_rl),imag(p_des_avph_rl),'p','MarkerEdgeColor','r')
+    p_des_avph_rl = rlocus(AvPh_FT_PI_Inc_Plaque,1);
+    axis([-200 200 -200 200])
+    plot(real(p_des_avph_rl),imag(p_des_avph_rl),'s','MarkerEdgeColor','g')
+    legend('FT','FT + AvPh','FT + AvPh + PI','Pôles désirés','Pôles obtenus (AvPh)','Pôles Obtenus (AvPh PI)','Location','North')
+    title('RootLocus FT \theta et \Phi , une AvPh et leur PI')
+    hold off
+    
+    figure('Name','Lieu de Bode')
+    hold on
+    margin(FT_Inc_Plaque,'b')
+    margin(AvPh_FT_Inc_Plaque,'r')
+    margin(AvPh_FT_PI_Inc_Plaque,'g')
+    legend('FT','Ft + AvPh','Ft + AvPh + PI')
+    title('Lieu de Bode de la FT, FT + AvPH et FT + AvPh + PI')
+    grid on
     hold off
 end
 
-
+% Simulation
+if useLocalResponseSimulation == 1
+    PI_FT_FB = feedback(AvPh_FT_PI_Inc_Plaque,1);
+    t = [0:0.01:15];
+    % u = ones(size(t));
+    u = t;
+    % u = t.^2;
+    [num_PI_FT_FB, den_PI_FT_FB] = tfdata(PI_FT_FB,'v');
+    simu = lsim(num_PI_FT_FB,den_PI_FT_FB,u,t);
+    simuinfos = lsiminfo(simu,t);
+    Mp_simu = (max(simu)-simu(end))/simu(end);
+    if showGraphicsAndData == 1
+        figure('Name','Réponse à une entrée unitaire')
+        hold on
+        plot(t,simu,'b')
+        % yline(0.98.*simu(end),'r--')
+        % yline(1.02.*simu(end),'r--')
+        ylabel('Réponse')
+        title('Réponse à une entrée unitaire')
+        grid on
+        hold off
+        disp(['ts(2%) = ', num2str(simuinfos.SettlingTime), ' s', ' (vs ', num2str(wn_ts2pc_Inc_Plaque), ' s)'])
+        disp(['Mp = ' num2str(Mp_simu.*100), ' %', ' (vs ', num2str(Mp_Inc_Plaque), ' %)'])
+        disp(' ')
+    end
+end
 

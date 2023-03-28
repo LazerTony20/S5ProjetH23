@@ -1,4 +1,4 @@
-% APP5 S5 Projet 
+% S5 Projet - TEAM Kirby
 % Asservissements (Sphere)
 clc
 close all

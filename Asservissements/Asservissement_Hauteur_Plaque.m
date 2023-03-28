@@ -1,4 +1,4 @@
-% APP5 S5 Projet 
+% S5 Projet - TEAM Kirby
 % Asservissements (Hauteur Plaque)
 clc
 close all
@@ -13,7 +13,6 @@ clc
 
 MP_H_P = 25;        % En degrés
 wg_H_P = 185;       % En Rads
-% Erp_ech_H_P = 
 
 
 
