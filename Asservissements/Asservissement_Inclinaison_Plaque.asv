@@ -31,15 +31,12 @@ ts2pc_theta_phi = 0.030;    % En secondes
 tp_theta_phi = 0.025;       % En secondes
 tr_10_90_theta_phi = 0.020; % En secondes
 
-% Valeurs 
-F=10;
-
 % Spécifications dérivées
 Phi_theta_phi = atand(-pi/log(Mp_theta_phi/100));
 Zeta_theta_phi = cosd(Phi_theta_phi);
-wn_ts2pc = 4./(ts2pc_theta_phi*Zeta_theta_phi);
-wn_tr_10_90 = (1+1.1*Zeta_theta_phi+1.4*Zeta_theta_phi^2)./tr_10_90_theta_phi;
-wn_tp = pi/(tp_theta_phi.*sqrt(1-Zeta_theta_phi^2));
+wn_ts2pc = 4/(ts2pc_theta_phi*Zeta_theta_phi);
+wn_tr_10_90 = (1+1.1*Zeta_theta_phi+1.4*Zeta_theta_phi^2)/tr_10_90_theta_phi;
+wn_tp = pi/(tp_theta_phi*sqrt(1-Zeta_theta_phi^2));
 wn_theta_phi = wn_ts2pc;
 wa_theta_phi = wn_theta_phi*sqrt(1-Zeta_theta_phi^2);
 p_des_theta_phi = [((-wn_theta_phi*Zeta_theta_phi) + wa_theta_phi.*1i); ((-wn_theta_phi*Zeta_theta_phi) - wa_theta_phi.*1i)];
@@ -62,30 +59,23 @@ end
 
 [numFT_theta_phi,denFT_theta_phi] = tfdata(FT_theta_phi,'v');
 
-Kpos_now_theta_phi = numFT_theta_phi(end)./denFT_theta_phi(end);
+
+Kpos_theta_phi = numFT_theta_phi(end)./denFT_theta_phi(end);
+
+F=10;
 % Kpos_theta_phi=1;
-Kvel_des = 100;
-Zpi = real(s_des_theta_phi)./F;
-Ki_theta_phi = Kvel_des./Kpos_now_theta_phi;
+Kvel_des=100;
+Zpi = real(s_des_theta_phi)/F;
+Ki_theta_phi = Kvel_des./Kpos_theta_phi;
 Kp_theta_phi = Ki_theta_phi./Zpi;
 
 numPI_theta_phi = [1 -Zpi];
 denPI_theta_phi = [1 0];
-PI_theta_phi = tf(Kp_theta_phi.*numPI_theta_phi,denPI_theta_phi);
+PI_theta_phi = Kp_theta_phi*tf(numPI_theta_phi,denPI_theta_phi)
 FT_theta_phi_PI = PI_theta_phi*FT_theta_phi;
 
 
 if showGraphicsAndData == 1
-    disp('==========Compensateur PI==========')
-    disp(' ')
-    disp(['Kpos actuel = ', num2str(Kpos_now_theta_phi)])
-    disp(['Kvel désiré = ', num2str(Kvel_des)])
-    disp(['Ki desiré = ', num2str(Ki_theta_phi)])
-    disp(['Kp désiré = ', num2str(Kp_theta_phi)])
-    disp(' ')
-    disp('La fonction de transfert du PI est : ')
-    PI_theta_phi
-    
     figure('Name','RootLocus FT theta et phi ainsi que leur PI')
     hold on
     rlocus(FT_theta_phi,'b')
@@ -95,6 +85,7 @@ if showGraphicsAndData == 1
     plot(real(p_des_rl),imag(p_des_rl),'s','MarkerEdgeColor','g')
     legend('FT','FT_PI','Pôles désirés','Pôles obtenus','Location','NorthWest')
     title('RootLocus FT \theta et \Phi et leur PI')
+%     axis([-400 40 -100 100])
     hold off
 end
 
