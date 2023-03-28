@@ -65,7 +65,7 @@ Kpos_now_theta_phi = numFT_theta_phi(end)./denFT_theta_phi(end);
 Kvel_des = 100;
 Zpi = real(s_des_theta_phi)./F;
 Ki_theta_phi = Kvel_des./Kpos_now_theta_phi;
-Kp_theta_phi = Ki_theta_phi./Zpi;
+Kp_theta_phi = -Ki_theta_phi./Zpi;
 
 numPI_theta_phi = [1 -Zpi];
 denPI_theta_phi = [1 0];
