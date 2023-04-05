@@ -1,0 +1,59 @@
+clear all
+close all
+clc
+
+x1 = [-0.08:0.001:0.08];
+x2 = [0.08:-0.001:-0.08];
+y1 = (0.04^2 - (x1.^2)./4).^0.5;
+y2 = 0.02*sin(2*pi*x2./0.16);
+ytest = x2.^2;
+%y2 = ytest;
+vitesse = 0.1;
+
+
+
+[coef2, parcours2, RMSEa2, RMSEr2, R22] = interpolation(x2, y2, 5);
+[g,Mxdata, L, Lx] = calc_longueur(x2(1), x2(end), coef2, 100);
+
+%[coef_g, gdata, RMSEaG, RMSErG, R2G] = interpolation(Mxdata, g, 8);
+% bdata = []
+% a = 0;
+% while a < 5
+%     [b, i] = NewRaph(a, [2 -5 1 1 -4 100 80], 1);
+%     %[b, i] = NewRaph(a, coef_g(end:-1:1)', 0.005);
+%     bdata = [bdata b];
+%     a = b;
+% end
+
+bdata = [];
+a = 0;
+while a < 0.16
+    [b, i] = NewRaphV2(a, coef2, 0.02);
+    %[b, i] = NewRaph(a, coef_g(end:-1:1)', 0.005);
+    bdata = [bdata b];
+    a = b;
+end
+
+
+
+%INPUTS – this is where you will change input data if you are doing
+% a different problem
+syms x;
+% Define the function
+curve= poly2sym(coef2);
+% lower limit
+
+% OUTPUTS
+% METHOD 1. Using the calculus formula
+% S=int(sqrt(1+dy/dx^2),a,b)
+% finding dy/dx
+poly_dif=diff(curve,x,1);
+% applying the formula
+integrand=sqrt(1+poly_dif^2);
+
+for i = 2:1:
+    a=bdata(i-1);
+    % b=upper limit
+    b=bdata(i);
+    leng_exact=double(int(integrand,x,a,b))
+end
