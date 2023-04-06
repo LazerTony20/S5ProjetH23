@@ -10,7 +10,7 @@ showGraphicsAndData = 1;            % Variable pour l'affichage des figures et i
 showIntermediaryGraphs = 1;         % Variable pour montrer les graphiques des fonctions intermédiaires
 useLocalTransferFunction = 1;       % Variable pour l'utilisation de la FT hard-codée (et non une externe)
 useLocalResponseSimulation = 1;     % Variable pour l'exécution de la simulation
-useFineTuning = 1;                  % Variable pour l'utilisation de Fine Tuning
+useFineTuning = 0;                  % Variable pour l'utilisation de Fine Tuning
 
 % Fonction de transfert en entrée
 if useLocalTransferFunction == 0
@@ -180,7 +180,7 @@ if showGraphicsAndData == 1
     rlocus(AvPh_FT_Inc_Plaque,'r')
     rlocus(AvPh_FT_PI_Inc_Plaque,'g')
     p_des_avph_pi_rl = rlocus(AvPh_FT_PI_Inc_Plaque,1);
-    plot(real(p_des_Inc_Plaque),imag(p_des_Inc_Plaque),'p','MarkerEdgeColor','b')
+    plot(real(p_des_I nc_Plaque),imag(p_des_Inc_Plaque),'p','MarkerEdgeColor','b')
     plot(real(p_des_avph_rl),imag(p_des_avph_rl),'s','MarkerEdgeColor','r')
     plot(real(p_des_avph_pi_rl),imag(p_des_avph_pi_rl),'s','MarkerEdgeColor','g')
     legend('FT','FT + AvPh','FT + AvPh + PI','Pôles désirés','Pôles obtenus (AvPh)','Pôles Obtenus (AvPh PI)','Location','North')

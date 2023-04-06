@@ -5,6 +5,8 @@ close all
 clear
 clc
 
+showGraphics = 0;
+
 % Spécifications
 % ➢ Marge de phase : 25 degrés
 % ➢ Fréquence de traverse en gain : 185 rad/s
@@ -20,9 +22,10 @@ num = [30.31];
 den = [1 31.3 -1213 -37970];
 FTBO = tf(num,den);
 
-figure
-rlocus(FTBO)
-
+if showGraphics == 1
+    figure
+    rlocus(FTBO)
+end
 % %----avph bode M1-----%
 % 
 % [mag,pha] = bode(FTBO,wg_des);
@@ -86,9 +89,10 @@ K_des = Kpos_des/Kpos_act;
 
 FTBOtemp = FTBO*K_des;
 
-figure
-margin(FTBOtemp)
-
+if showGraphics == 1
+    figure
+    margin(FTBOtemp)
+end
 [Gm,Pm,Wp,Wg] = margin(FTBOtemp);
 mrg =25;
 
@@ -113,11 +117,12 @@ avph = tf(numav,denav);
 
 FTBOav = Ka*FTBO*avph^2;
 
-figure
-bode(FTBOav)
-hold on
-margin(FTBOav)
-
+if showGraphics == 1
+    figure
+    bode(FTBOav)
+    hold on
+    margin(FTBOav)
+end
 [Gmav,Pmav,Wpav,Wgav] = margin(FTBOav);
 
 
