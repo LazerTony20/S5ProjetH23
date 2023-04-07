@@ -11,7 +11,7 @@ function [coefficients, data, RMSE_abs, RMSE_rel, R2] = interpolation(xdata, yda
     end 
 
     coefficients = inv(X)*Y;
-    coefficients = coefficients(end:-1:1)
+    coefficients = coefficients(end:-1:1);
     data = polyval(coefficients, xdata);
     
     RMSE_abs = sqrt(mean((data-ydata).^2));

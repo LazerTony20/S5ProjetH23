@@ -4,7 +4,10 @@ clc
 load('capteur.mat')
 
 RMSE_values = [];
+R2_value = [];
 F_function = [];
+alpha_value = [];
+beta_value = [];
 
 X = [];
 Y = [];
@@ -38,7 +41,9 @@ for i = 0:1:1120
     A = inv(X)*Y;
 
     alpha = exp(A(1));
+    alpha_value = [alpha_value alpha];
     beta = A(2);
+    beta_value = [beta_value beta];
     test = alpha.*(distance.^(beta));
     F = voltage(end)-test;
     F_function = [F_function F];
@@ -46,50 +51,70 @@ for i = 0:1:1120
     RMSE_values = [RMSE_values RMSE];
 end
 
+
 minimum_RMSE = min(RMSE_values);
-[RMSE_x,RMSE_y] = find(RMSE_values == minimum_RMSE)
-figure()
-hold on
-plot(distance, F_function(:,289))
-plot(distance, voltage)
+best_R2 = max(R2_value);
+[RMSE_x,RMSE_y] = find(RMSE_values == minimum_RMSE);
+[R2_x,R2_y] = find(R2_value == best_R2);
 
-error = voltage-F_function(:,289)
-error_test = 0.1*sin(distance./(0.025/3.25) + pi) 
+F_candidat =  F_function(:,RMSE_y);
 
 figure()
 hold on
-plot(distance, error)
-plot(distance, error_test)
+plotGraphic(distance, F_candidat,'Courbe de l''approximation de la puissance',  ['Distance (mm)'], ['Voltage (V)'])
+plotGraphic(distance, voltage,'Courbe de l''approximation de la puissance',  ['Distance (mm)'], ['Voltage (V)'])
+legend('Courbe de l''approximation', 'Courbe des données')
+disp(['----------------------------------------------Approximation par moindre carré '])
+[~, ~] = error_Calculator(F_candidat, voltage)
+disp(['Valeur de alpha :', num2str(alpha_value(RMSE_y))]);
+disp(['Valeur de beta : ', num2str(beta_value(RMSE_y))])
+disp(['----------------------------------------------Approximation par moindre carré '])
 
-F_first_corr = F_function(:,289)+error_test
+%% Correction de l'erreur
+error = voltage-F_candidat;
+error_test = 0.1*sin(137.0968.*distance + pi-0.30) ;
+
 figure()
 hold on
-plot(distance, F_first_corr)
-plot(distance, voltage)
+plotGraphic(distance, error,'Courbe de l''erreur de l''approximation de la puissance',  ['Distance (mm)'], ['\DeltaVoltage (V)'])
+plotGraphic(distance, error_test,'Courbe de l''erreur de l''approximation de la puissance',  ['Distance (mm)'], ['\DeltaVoltage (V)'])
+legend('Courbe de l''erreur', 'Courbe de la correction d''erreur')
 
-error = voltage-F_first_corr
-error_test_2 = 0.02*sin((distance*2*pi)./(0.021)) 
+
+%% Résultats de la première correction d'erreur
+F_first_corr = F_candidat+error_test;
+figure()
+hold on
+plotGraphic(distance, F_first_corr,'Courbe de l''approximation de la puissance: correction 1',  ['Distance (mm)'], ['Voltage (V)'])
+plotGraphic(distance, voltage, ['Courbe de l''approximation de la puissance: correction 1'], ['Distance (mm)'], ['Voltage (V)'])
+
+disp(['----------------------------------------------Résultats de la correction de L''erreur '])
+[RMSE_abs,RMSE_rel, R2] = error_Calculator(F_first_corr,voltage);
+disp(['----------------------------------------------Résultats de la correction de L''erreur '])
+legend('Courbe de l''approximation', 'Courbe des données')
+
+
+%% approcimation de l'erreur deuxieme fois
+error = voltage-F_first_corr;
+error_test_2 = (2.5.*distance)+0.014*sin((distance*2*pi)./(0.023))-0.030;
+
 
 figure()
 hold on
-plot(distance, error)
-plot(distance, error_test_2)
+hold on
+plotGraphic(distance, error,'Courbe de l''erreur de l''approximation de la puissance : correction 1',  ['Distance (mm)'], ['\DeltaVoltage (V)'])
+plotGraphic(distance, error_test_2,'Courbe de l''erreur de l''approximation de la puissance : correction 1',  ['Distance (mm)'], ['\DeltaVoltage (V)'])
+legend('Courbe de l''erreur', 'Courbe de la correction d''erreur')
 
-RMSE = sqrt(mean((F_first_corr-voltage).*(F_first_corr-voltage)))
-N = size(distance);
-N = N(1)
-y_moy = 1/N * sum(voltage);
-R2 = (sum((F_first_corr-y_moy).^2))/(sum((voltage-y_moy).^2))
 
+%% Résultat de la deuxième correction d'erreur
 F_sec_corr = F_first_corr+error_test_2;
+
 figure()
 hold on
-plot(distance, F_sec_corr)
-plot(distance, voltage)
-
-RMSE = sqrt(mean((F_sec_corr-voltage).*(F_sec_corr-voltage)))
-N = size(distance);
-N = N(1)
-y_moy = 1/N * sum(voltage);
-R2 = (sum((F_sec_corr-y_moy).^2))/(sum((voltage-y_moy).^2))
-
+plotGraphic(distance, F_sec_corr,'Courbe de l''approximation de la puissance correction 2',  ['Distance (mm)'], ['Voltage (V)'])
+plotGraphic(distance, voltage, ['Courbe de l''approximation de la puissance: correction 2'], ['Distance (mm)'], ['Voltage (V)'])
+legend('Courbe de l''approximation', 'Courbe des données')
+disp(['----------------------------------------------Résultats de la correction de L''erreur, deuxième itération '])
+[~,~] = error_Calculator(F_sec_corr(300:end),voltage(300:end));
+disp(['----------------------------------------------Résultats de la correction de L''erreur, deuxième itération '])
