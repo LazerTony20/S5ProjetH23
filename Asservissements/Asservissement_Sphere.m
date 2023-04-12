@@ -48,7 +48,7 @@ nyquist(G,'b')
 grid on
 
 
-
+testdiscret(Gtot)
 
 
 
