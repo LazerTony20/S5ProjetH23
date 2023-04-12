@@ -7,10 +7,11 @@ clc
 
 % Contrôle de l'affichage et FT
 showGraphicsAndData = 1;            % Variable pour l'affichage des figures et infos dans le terminal
-showIntermediaryGraphs = 1;         % Variable pour montrer les graphiques des fonctions intermédiaires
+showIntermediaryGraphs = 0;         % Variable pour montrer les graphiques des fonctions intermédiaires
 useLocalTransferFunction = 1;       % Variable pour l'utilisation de la FT hard-codée (et non une externe)
 useLocalResponseSimulation = 1;     % Variable pour l'exécution de la simulation
-useFineTuning = 0;                  % Variable pour l'utilisation de Fine Tuning
+useFineTuning = 1;                  % Variable pour l'utilisation de Fine Tuning
+useKp_PI = 1;                       % Utiliser Kp calculé ou Kp = 1
 
 % Fonction de transfert en entrée
 if useLocalTransferFunction == 0
@@ -34,18 +35,19 @@ tp_Inc_Plaque = 0.025;       % En secondes
 tr_10_90_Inc_Plaque = 0.020; % En secondes
 
 % Valeurs 
-F_Inc_Plaque = 10;
-
+F_Inc_Plaque = 9;
+nb_AvPh = 2;
+Marge_deg = 5;
 
 % Fine Tuning Variables
 if useFineTuning == 1
     % Modificaiton des pôles pour tirer vers la gauche
-    P_deplacement_real = -400;  %(-97,0);%(-65,1);
-    P_deplacement_imag = 350 * 1i;
+    P_deplacement_real = -97;  %(-97,0);%(-65,1);
+    P_deplacement_imag = 0 * 1i;
     % Surcompensation DeltaPhi
-    DeltaPhi_surcomp_AvPh = 72;
+    DeltaPhi_surcomp_AvPh = 0;
     % Facteur de Gain de l'avance de phase
-    Fac_Gain_AvPh = 0.97;    
+    Fac_Gain_AvPh = 0.90;    
 end
 
 % Spécifications dérivées
@@ -84,11 +86,10 @@ end
 [numFT_Inc_Plaque,denFT_Inc_Plaque] = tfdata(FT_Inc_Plaque,'v');
 
 % ===============Compensateur Multiple AvPh===============
-nb_AvPh = 4;
 Alpha_Inc_Plaque = 180 - Phi_Inc_Plaque;
 Angle_FT_Inc_Plaque = rad2deg(angle(polyval(numFT_Inc_Plaque,s_des_Inc_Plaque))-angle(polyval(denFT_Inc_Plaque,s_des_Inc_Plaque)))-360;
 DeltaPhi_Inc_Plaque = -180 - Angle_FT_Inc_Plaque;
-DeltaPhi_Inc_Plaque = DeltaPhi_Inc_Plaque + 5;                         % Ajout de ma marge
+DeltaPhi_Inc_Plaque = DeltaPhi_Inc_Plaque + Marge_deg;                         % Ajout de ma marge
 if useFineTuning == 1
     DeltaPhi_Inc_Plaque = DeltaPhi_Inc_Plaque + DeltaPhi_surcomp_AvPh;     % Surcompensation
 end
@@ -121,13 +122,14 @@ if showGraphicsAndData ==1
     disp('La fonciton de transfert de l`AvPh est : ')
     AvPh_Inc_Plaque
     % Affichage des figures
+    p_des_avph_rl = rlocus(AvPh_FT_Inc_Plaque,1);
     if showIntermediaryGraphs == 1
         % Lieu des racines
         figure('Name','RootLocus FT theta et phi ainsi que une AvPh')
         hold on
         rlocus(FT_Inc_Plaque,'b')
         rlocus(AvPh_FT_Inc_Plaque,'r')
-        p_des_avph_rl = rlocus(AvPh_FT_Inc_Plaque,1);
+        
         plot(real(p_des_Inc_Plaque),imag(p_des_Inc_Plaque),'p','MarkerEdgeColor','b')
         plot(real(p_des_avph_rl),imag(p_des_avph_rl),'s','MarkerEdgeColor','g')
         legend('FT','FT + AvPh','Pôles désirés','Pôles obtenus','Location','North')
@@ -149,13 +151,16 @@ end
 
 % ===============Compensateur PI Simple===============
 Zpi_Inc_Plaque = real(s_des_Inc_Plaque)./F_Inc_Plaque; % PI SIMPLE
-% Kpos_now_Inc_Plaque = numAvPh_FT_Inc_Plaque(end)./denAvPh_FT_Inc_Plaque(end);
-% Kvel_des_Inc_Plaque = 10000;
-% Zpi_Inc_Plaque = real(s_des_Inc_Plaque)./F_Inc_Plaque;
-% Ki_Inc_Plaque = Kvel_des_Inc_Plaque./Kpos_now_Inc_Plaque;
-% Kp_Inc_Plaque = -Ki_Inc_Plaque./Zpi_Inc_Plaque;
+Kpos_now_Inc_Plaque = numAvPh_FT_Inc_Plaque(end)./-denAvPh_FT_Inc_Plaque(end);
+Kvel_des_Inc_Plaque = 10000;
+
+Ki_Inc_Plaque = Kvel_des_Inc_Plaque./Kpos_now_Inc_Plaque;
+Kp_Inc_Plaque = -Ki_Inc_Plaque./Zpi_Inc_Plaque;
 % numPI_Inc_Plaque = Kp_Inc_Plaque*[1 -Zpi_Inc_Plaque];
-numPI_Inc_Plaque = [1 -Zpi_Inc_Plaque];
+if useKp_PI == 0
+    Kp_Inc_Plaque = 1;
+end
+numPI_Inc_Plaque = Kp_Inc_Plaque*[1 -Zpi_Inc_Plaque];
 denPI_Inc_Plaque = [1 0];
 PI_Inc_Plaque = tf(numPI_Inc_Plaque,denPI_Inc_Plaque);
 
@@ -164,11 +169,12 @@ AvPh_FT_PI_Inc_Plaque = AvPh_FT_Inc_Plaque*PI_Inc_Plaque;
 
 if showGraphicsAndData == 1
     disp('==========Compensateur PI==========')
-%     disp(' ')
-%     disp(['Kpos actuel = ', num2str(Kpos_now_Inc_Plaque)])
-%     disp(['Kvel désiré = ', num2str(Kvel_des_Inc_Plaque)])
-%     disp(['Ki desiré = ', num2str(Ki_Inc_Plaque)])
-%     disp(['Kp désiré = ', num2str(Kp_Inc_Plaque)])
+    disp(' ')
+    disp(['Le zéro est situé à = ', num2str(Zpi_Inc_Plaque)])
+    disp(['Kpos actuel = ', num2str(Kpos_now_Inc_Plaque)])
+    disp(['Kvel désiré = ', num2str(Kvel_des_Inc_Plaque)])
+    disp(['Ki desiré = ', num2str(Ki_Inc_Plaque)])
+    disp(['Kp désiré = ', num2str(Kp_Inc_Plaque)])
     disp(' ')
     disp('La fonction de transfert du PI est : ')
     PI_Inc_Plaque
@@ -180,7 +186,7 @@ if showGraphicsAndData == 1
     rlocus(AvPh_FT_Inc_Plaque,'r')
     rlocus(AvPh_FT_PI_Inc_Plaque,'g')
     p_des_avph_pi_rl = rlocus(AvPh_FT_PI_Inc_Plaque,1);
-    plot(real(p_des_I nc_Plaque),imag(p_des_Inc_Plaque),'p','MarkerEdgeColor','b')
+    plot(real(p_des_Inc_Plaque),imag(p_des_Inc_Plaque),'p','MarkerEdgeColor','b')
     plot(real(p_des_avph_rl),imag(p_des_avph_rl),'s','MarkerEdgeColor','r')
     plot(real(p_des_avph_pi_rl),imag(p_des_avph_pi_rl),'s','MarkerEdgeColor','g')
     legend('FT','FT + AvPh','FT + AvPh + PI','Pôles désirés','Pôles obtenus (AvPh)','Pôles Obtenus (AvPh PI)','Location','North')
@@ -190,8 +196,8 @@ if showGraphicsAndData == 1
     % Lieu de Bode
     figure('Name','Lieu de Bode')
     hold on
-    margin(FT_Inc_Plaque,'b')
-    margin(AvPh_FT_Inc_Plaque,'r')
+    bode(FT_Inc_Plaque,'b')
+    bode(AvPh_FT_Inc_Plaque,'r')
     margin(AvPh_FT_PI_Inc_Plaque,'g')
     legend('FT','Ft + AvPh','Ft + AvPh + PI')
     title('Lieu de Bode de la FT, FT + AvPH et FT + AvPh + PI')
@@ -203,8 +209,8 @@ end
 [Gm_AvPh_FT_PI_Inc_Plaque, Pm_AvPh_FT_PI_Inc_Plaque,~,~] = margin(AvPh_FT_PI_Inc_Plaque);
 if showGraphicsAndData == 1
     disp('====CALCUL DES PARAMÈTRES DE SÉCURITÉ======')
-    disp(['La PM initial du systeme complet est : ', num2str(Pm_AvPh_FT_PI_Inc_Plaque), ' deg'])
-    disp(['La GM initial du systeme complet est : ', num2str(20*log10(Gm_AvPh_FT_PI_Inc_Plaque)), ' db'])
+    disp(['La PM initial du systeme complet est : ', num2str(Pm_AvPh_FT_PI_Inc_Plaque), ' deg (min 25 deg)'])
+    disp(['La GM initial du systeme complet est : ', num2str(20*log10(Gm_AvPh_FT_PI_Inc_Plaque)), ' db (min 10dB)'])
     disp(' ')
 end
 
@@ -213,7 +219,7 @@ if useLocalResponseSimulation == 1
     PI_FT_FB = feedback(AvPh_FT_PI_Inc_Plaque,1);
     t_start = 0;
     t_step = 0.001;
-    t_end = 2;
+    t_end = 50;
     t = [t_start:t_step:t_end];
     u = ones(size(t));
     % u = t;
