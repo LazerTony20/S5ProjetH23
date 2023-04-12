@@ -4,7 +4,7 @@ clc
 
 starttime = 0;
 stoptime = 10;
-fixedstep = 0.1;
+fixedstep = 0.001;
 
 bancEssaiConstantes;
 load("coefficients.mat")

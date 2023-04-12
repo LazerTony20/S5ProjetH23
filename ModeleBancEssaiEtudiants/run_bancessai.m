@@ -6,7 +6,7 @@ clc
 sig = 1.0;         % Présence (1) ou non (0) de la sphère
 xSeq = 0.000;      % Position x de la sphère à l'équilibre en metres
 ySeq = 0.000;      % Position y de la sphère à l'équilibre en metres
-
+be = 13.029359254409743; %Valeur de Be
 %Point d'opération choisi pour la plaque
 Axeq = 0;               %en degres
 Ayeq = 0;               %en degres
