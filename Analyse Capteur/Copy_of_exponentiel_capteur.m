@@ -17,22 +17,22 @@ Y = [];
 for i=0:1:7
     X_line = [];
     for j=0:1:7
-        X_line = [X_line sum(distance.^(i+j))];
+        X_line = [X_line sum(voltage.^(i+j))];
     end
     X = [X; X_line];
-    Y = [Y; sum((distance.^i).*voltage)];
+    Y = [Y; sum((voltage.^i).*distance)];
 end 
 A = inv(X)*Y;
-voltage_lis = A(1) + A(2).*distance + A(3).*distance.^2 + A(4).*distance.^3 + A(5).*distance.^4 + A(6).*distance.^5 + A(7).*distance.^6 + A(8).*distance.^7;
+distance_lis = A(1) + A(2).*voltage + A(3).*voltage.^2 + A(4).*voltage.^3 + A(5).*voltage.^4 + A(6).*voltage.^5 + A(7).*voltage.^6 + A(8).*voltage.^7;
 
 
 for i = 0:1:1000
     removed_value = i;
-    V = voltage_lis(1:end-removed_value);
-    V = abs(V-V(end));
-    V(end) = 0.05;
+    V = distance_lis(1:end-removed_value);
+    V = abs(V-V(1));
+    V(1) = 0.000000001;
     y = log(V);
-    x = distance(1:end-removed_value);
+    x = voltage(1:end-removed_value);
     N = size(x);
     N = N(1);
     X = [N sum(x); sum(x) sum(x.^2)];
@@ -42,13 +42,13 @@ for i = 0:1:1000
     alpha_value = [alpha_value alpha];
     beta = A(2);
     beta_value = [beta_value beta];
-    test = alpha*exp(beta*distance);
-    F = -test+voltage(end);
+    test = alpha*exp(beta*voltage);
+    F = -test+distance(1);
     F_function = [F_function F];
-    RMSE = sqrt(mean((F-voltage).*(F-voltage)));
+    RMSE = sqrt(mean((F-distance).*(F-distance)));
     RMSE_values = [RMSE_values RMSE];
-    y_moy = 1/N * sum(voltage);
-    R2 = 1-(sum((F-voltage).^2))/(sum((voltage-y_moy).^2));
+    y_moy = 1/N * sum(distance);
+    R2 = 1-(sum((F-distance).^2))/(sum((distance-y_moy).^2));
     R2_value = [R2_value R2];
 end
 
@@ -61,18 +61,18 @@ F_candidat =  F_function(:,RMSE_y);
 
 figure()
 hold on
-plotGraphic(distance, F_candidat,'Courbe de l''approximation de l''exponentielle',  ['Distance (m)'], ['Voltage (V)'])
-plotGraphic(distance, voltage,'Courbe de l''approximation de l''exponentielle',  ['Distance (m)'], ['Voltage (V)'])
+plotGraphic(voltage, F_candidat,'Courbe de l''approximation de l''exponentielle',  ['voltage (m)'], ['distance (V)'])
+plotGraphic(voltage, distance,'Courbe de l''approximation de l''exponentielle',  ['voltage (m)'], ['distance (V)'])
 legend('Courbe de l''approximation', 'Courbe des données')
 disp(['----------------------------------------------Approximation par moindre carré '])
-[~, ~] = error_Calculator(F_candidat, voltage)
+[~, ~] = error_Calculator(F_candidat, distance)
 disp(['Valeur de alpha :', num2str(alpha_value(RMSE_y))]);
 disp(['Valeur de beta : ', num2str(beta_value(RMSE_y))])
 disp(['----------------------------------------------Approximation par moindre carré '])
 
 
 %% Correction de la fonction première itération
-error = voltage-F_candidat;
+error = distance-F_candidat;
 error_test = 0.055*sin(distance./(0.025/2.75) + pi)+0.01 ;
 
 

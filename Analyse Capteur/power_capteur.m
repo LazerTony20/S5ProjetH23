@@ -118,3 +118,10 @@ legend('Courbe de l''approximation', 'Courbe des données')
 disp(['----------------------------------------------Résultats de la correction de L''erreur, deuxième itération '])
 [~,~] = error_Calculator(F_sec_corr(300:end),voltage(300:end));
 disp(['----------------------------------------------Résultats de la correction de L''erreur, deuxième itération '])
+
+%%
+figure
+hold on
+test = 8071909.8954.*(distance.^(4.3114));
+F = voltage(end)-test;
+plot(distance, F)

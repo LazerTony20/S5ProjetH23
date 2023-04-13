@@ -17,7 +17,21 @@ t_des     = [0:1:8]'*5;
 x_des     = [t_des, [0 0 0.5 1  0 -1 0 1 0]'*0.05];
 y_des     = [t_des, [0 0 0 0 -1  0 1 0 0]'*0.05];
 z_des     = [t_des, [1 1 1 1  1  1 1 1 1]'*.015];
-tfin = 50;
+tfin = 10;
+
+x1 = [-0.08:0.02:0.08];
+x2 = [0.08:-0.02:-0.08];
+y1 = (0.04^2 - (x1.^2)./4).^0.5;
+y2 = 0.02*sin(2*pi*x2./0.16);
+
+vitesse = 0.1;
+Ts = 1/30;
+Pdata = [x2(:) y2(:)];
+
+[Pi, Ltr, E, Vr, traj, tt, dataSim, dDistance] = trajectoire(Pdata, vitesse, Ts);
+t_des     = dataSim(:,1);
+x_des     = [t_des, dataSim(:,2)];
+y_des     = [t_des, dataSim(:,3)];
 
 %initialisation
 bancEssaiConstantes
