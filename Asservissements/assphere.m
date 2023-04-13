@@ -10,13 +10,17 @@ wn=4/(2*zeta);
 wn2=4/(4*zeta);
 phi=acosd(zeta);
 
-kv=(2*zeta*wn)/num;
+
 kp=(wn^2)/num;
+kv=(2*zeta*wn)/(num*kp);
 
 G=tf(num,den);
 Gv=tf([kv 0],1);
 GGv=feedback(G,Gv);
 f=GGv*kp;
+
+
+% save assphere.mat kp kv
 
 
 

@@ -11,7 +11,7 @@ showIntermediaryGraphs = 0;         % Variable pour montrer les graphiques des f
 useLocalTransferFunction = 1;       % Variable pour l'utilisation de la FT hard-codée (et non une externe)
 useLocalResponseSimulation = 1;     % Variable pour l'exécution de la simulation
 useFineTuning = 1;                  % Variable pour l'utilisation de Fine Tuning
-useKp_PI = 1;                       % Utiliser Kp calculé ou Kp = 1
+useKp_PI = 0;                       % Utiliser Kp calculé ou Kp = 1
 
 % Fonction de transfert en entrée
 if useLocalTransferFunction == 0
@@ -35,19 +35,21 @@ tp_Inc_Plaque = 0.025;       % En secondes
 tr_10_90_Inc_Plaque = 0.020; % En secondes
 
 % Valeurs 
-F_Inc_Plaque = 9;
-nb_AvPh = 2;
+F_Inc_Plaque = 8;
+nb_AvPh = 4;
 Marge_deg = 5;
+temps_sim = 1;
+step_sim = 0.00001;
 
 % Fine Tuning Variables
 if useFineTuning == 1
     % Modificaiton des pôles pour tirer vers la gauche
-    P_deplacement_real = -97;  %(-97,0);%(-65,1);
-    P_deplacement_imag = 0 * 1i;
+    P_deplacement_real = -420;  %(-97,0);%(-65,1);
+    P_deplacement_imag = 350 * 1i;
     % Surcompensation DeltaPhi
-    DeltaPhi_surcomp_AvPh = 0;
+    DeltaPhi_surcomp_AvPh = 79;  %77
     % Facteur de Gain de l'avance de phase
-    Fac_Gain_AvPh = 0.90;    
+    Fac_Gain_AvPh = 0.87;   %0.87    
 end
 
 % Spécifications dérivées
@@ -151,9 +153,8 @@ end
 
 % ===============Compensateur PI Simple===============
 Zpi_Inc_Plaque = real(s_des_Inc_Plaque)./F_Inc_Plaque; % PI SIMPLE
-Kpos_now_Inc_Plaque = numAvPh_FT_Inc_Plaque(end)./-denAvPh_FT_Inc_Plaque(end);
+Kpos_now_Inc_Plaque = numAvPh_FT_Inc_Plaque(end)./denAvPh_FT_Inc_Plaque(end);
 Kvel_des_Inc_Plaque = 10000;
-
 Ki_Inc_Plaque = Kvel_des_Inc_Plaque./Kpos_now_Inc_Plaque;
 Kp_Inc_Plaque = -Ki_Inc_Plaque./Zpi_Inc_Plaque;
 % numPI_Inc_Plaque = Kp_Inc_Plaque*[1 -Zpi_Inc_Plaque];
@@ -162,7 +163,8 @@ if useKp_PI == 0
 end
 numPI_Inc_Plaque = Kp_Inc_Plaque*[1 -Zpi_Inc_Plaque];
 denPI_Inc_Plaque = [1 0];
-PI_Inc_Plaque = tf(numPI_Inc_Plaque,denPI_Inc_Plaque);
+Kp_PI = 1/(abs(polyval(numPI_Inc_Plaque,s_des_Inc_Plaque)/polyval(denPI_Inc_Plaque,s_des_Inc_Plaque))^nb_AvPh) * abs(polyval(numAvPh_FT_Inc_Plaque,s_des_Inc_Plaque)/polyval(denAvPh_FT_Inc_Plaque,s_des_Inc_Plaque));
+PI_Inc_Plaque = tf(Kp_PI*numPI_Inc_Plaque,denPI_Inc_Plaque);
 
 AvPh_FT_PI_Inc_Plaque = AvPh_FT_Inc_Plaque*PI_Inc_Plaque;
 
@@ -175,6 +177,7 @@ if showGraphicsAndData == 1
     disp(['Kvel désiré = ', num2str(Kvel_des_Inc_Plaque)])
     disp(['Ki desiré = ', num2str(Ki_Inc_Plaque)])
     disp(['Kp désiré = ', num2str(Kp_Inc_Plaque)])
+    disp(['Kp utilisé = ', num2str(Kp_PI)])
     disp(' ')
     disp('La fonction de transfert du PI est : ')
     PI_Inc_Plaque
@@ -218,8 +221,8 @@ end
 if useLocalResponseSimulation == 1
     PI_FT_FB = feedback(AvPh_FT_PI_Inc_Plaque,1);
     t_start = 0;
-    t_step = 0.001;
-    t_end = 50;
+    t_step = step_sim;
+    t_end = temps_sim;
     t = [t_start:t_step:t_end];
     u = ones(size(t));
     % u = t;
@@ -246,3 +249,4 @@ if useLocalResponseSimulation == 1
     end
 end
 
+testdiscret(AvPh_FT_PI_Inc_Plaque)

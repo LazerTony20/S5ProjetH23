@@ -7,7 +7,7 @@ format short g
 
 num=[7.007];
 den=[1 0 0];
-G=assphere(num,den);
+G = assphere(num,den);
 Gtot=feedback(G,1);
 
 figure
@@ -48,7 +48,7 @@ nyquist(G,'b')
 grid on
 
 
-
+testdiscret(Gtot)
 
 
 

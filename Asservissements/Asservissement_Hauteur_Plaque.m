@@ -23,7 +23,7 @@ den = [1 31.3 -1213 -37970];
 FTBO = tf(num,den);
 
 if showGraphics == 1
-    figure
+    figure('Name','Fonction de transfert originale')
     rlocus(FTBO)
 end
 % %----avph bode M1-----%
@@ -126,6 +126,6 @@ end
 [Gmav,Pmav,Wpav,Wgav] = margin(FTBOav);
 
 
-
+testdiscret(FTBOav)
 
 
